@@ -55,6 +55,7 @@ const initializeDB = () => {
 initializeDB();
 
 //check database
+//testing purposes
 app.get("/login", (req, res) => {
   res.status(200).json({ users: users });
 });
@@ -110,6 +111,37 @@ app.post("/login", (req, res) => {
       }
     }
   });
+});
+
+// add to cart
+app.put("/addToCart", (req, res) => {
+  //requires username to be hashed first
+  //   const itemId = req.body.itemId;
+  //   const username = req.body.username;
+  //   const amount = req.body.quantity;
+  //   const user = users.find((user) => {
+  //     user.username === username;
+  //   });
+  //   const itemInCart = user.cart.find((item) => {
+  //     item.id === itemId;
+  //   });
+  //   if (amount > 0) {
+  //     if (itemInCart) {
+  //       itemInCart.quantity = amount;
+  //     } else {
+  //       const cartItem = { id: itemId, quantity: amount };
+  //       user.cart.push(cartItem);
+  //     }
+  //   } else {
+  //     const arrayWithoutItem = user.cart.filter((itemId) => {
+  //       itemId !== id;
+  //     });
+  //     user.cart = arrayWithoutItem;
+  //   }
+  //   // user will exist because if not it will propt user to login or register
+  //   res
+  //     .send(200)
+  //     .json("item id: " + itemId + "added. user card now : " + userCart);
 });
 
 //sign up
