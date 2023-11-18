@@ -7,7 +7,7 @@ const saltRounds = 10;
 const users = [];
 app.use(express.json());
 
-const initializeDB = () => {
+const initializeDB = async () => {
   const accounts = [
     {
       username: "customer1",
@@ -37,18 +37,19 @@ const initializeDB = () => {
     },
   ];
   for (const account of accounts) {
-    bcrypt.hash(account.password, saltRounds, (err, hash) => {
-      if (err) {
-        console.error("Error while hashing password:", err);
-      } else {
-        const user = {
-          username: account.username,
-          password: hash,
-          cart: account.cart,
-        };
-        users.push(user);
-      }
-    });
+    try {
+      const hashedUsername = await bcrypt.hash(account.username, saltRounds);
+      const hashedPassword = await bcrypt.hash(account.password, saltRounds);
+
+      const user = {
+        username: hashedUsername,
+        password: hashedPassword,
+        cart: account.cart,
+      };
+      users.push(user);
+    } catch {
+      console.error("Error hashing initialization data");
+    }
   }
 };
 
@@ -145,20 +146,25 @@ app.put("/addToCart", (req, res) => {
 });
 
 //sign up
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  try {
+    const hashedUsername = await bcrypt.hash(username, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  bcrypt.hash(password, saltRounds, (err, hash) => {
-    if (err) {
-      console.error("Error while hashing password:", err);
-    } else {
-      const user = { username: username, password: hash, cart: [] };
-      users.push(user);
-      console.log(users);
-      res.status(200).json({ message: user.username + " created" });
-    }
-  });
+    const user = {
+      username: hashedUsername,
+      password: hashedPassword,
+      cart: [],
+    };
+    users.push(user);
+    console.log(users);
+    res.status(200).json({ message: username + " created" });
+  } catch {
+    console.error("Error while hashing password");
+    res.status(500);
+  }
 });
 
 app.listen(port, () => {
