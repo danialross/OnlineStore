@@ -6,6 +6,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const saltRounds = 10;
 const users = [];
+const blacklist = [];
 app.use(express.json());
 const secretKey = "super-secret-key";
 
@@ -94,7 +95,6 @@ app.post("/login", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  console.log(username);
   const user = users.find((user) => user.username === username);
 
   if (!user) {
@@ -121,8 +121,9 @@ app.post("/login", async (req, res) => {
 
 const authenticateToken = (req, res, next) => {
   const token = req.header("Authorization");
+  const isBlackListed = blacklist.includes(token);
 
-  if (!token) {
+  if (!token || isBlackListed) {
     return res.status(401).json({ error: "Access denied" });
   }
 
@@ -136,26 +137,27 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+//log out
+app.post("/logout", authenticateToken, (req, res) => {
+  const token = req.headers.authorization.substring(7);
+  blacklist.push(token);
+  console.log(blacklist);
+  res.status(200).json({ message: "Logout successful" });
+});
+
 // add to cart
 app.put("/addToCart", authenticateToken, async (req, res) => {
   const itemId = req.body.itemId;
   const amount = req.body.quantity;
   const username = req.body.username;
 
-  console.log(itemId);
-  console.log(amount);
-  console.log(username);
-
   const user = users.find((user) => {
     return user.username === username;
   });
-  console.log(user);
 
   const itemInCart = user.cart.find((item) => {
     return item.id === itemId;
   });
-
-  console.log(itemInCart);
 
   if (amount > 0) {
     if (itemInCart) {
@@ -163,7 +165,6 @@ app.put("/addToCart", authenticateToken, async (req, res) => {
     } else {
       const cartItem = { id: itemId, quantity: amount };
       user.cart.push(cartItem);
-      console.log("pushed");
     }
   } else {
     const arrayWithoutItem = user.cart.filter((item) => {
