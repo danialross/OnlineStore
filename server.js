@@ -186,6 +186,19 @@ app.put("/addToCart", authenticateToken, async (req, res) => {
     .json("item id: " + itemId + " added. user cart now : " + idInCart);
 });
 
+//check out
+app.put("/checkout", authenticateToken, async (req, res) => {
+  const username = req.body.username;
+
+  const user = users.find((user) => {
+    return user.username === username;
+  });
+
+  user.cart = [];
+
+  res.status(200).json("user has checked out, cart is now empty");
+});
+
 //sign up
 app.post("/register", async (req, res) => {
   const username = req.body.username;
