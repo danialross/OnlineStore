@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -8,7 +8,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { NavLink } from "react-router-dom";
 
 function Header(props) {
-  const [username, setUsername] = useState("Kevin");
+  const [username] = useState(props.username);
 
   const StyledNavbar = styled(Navbar)`
     background-color: #89abe3;

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 
 function App() {
+  const mockUsername = "kevin";
   return (
     <BrowserRouter>
       <Routes>
@@ -10,7 +11,7 @@ function App() {
           path="/"
           exact
           element={
-            <Header>
+            <Header username={mockUsername}>
               <HomePage />
             </Header>
           }
@@ -18,7 +19,7 @@ function App() {
         <Route
           path="/sale"
           element={
-            <Header>
+            <Header username={mockUsername}>
               <h1>empty</h1>
             </Header>
           }
