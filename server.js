@@ -137,6 +137,15 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+//get cart
+app.get("/cart", authenticateToken, (req, res) => {
+  const account = users.find((account) => {
+    return account.username === req.user.username;
+  });
+  console.log(account.cart);
+  res.status(200).json(account.cart);
+});
+
 //log out
 app.post("/logout", authenticateToken, (req, res) => {
   const token = req.headers.authorization.substring(7);
