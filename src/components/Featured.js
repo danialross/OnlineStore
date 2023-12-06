@@ -23,9 +23,6 @@ const ResponsiveImage = styled(Image)`
   max-height: 15rem;
 `;
 
-const StyledDiv = styled.div`
-  background-color: #edcac4;
-`;
 const Frame = styled.div`
   display: flex;
   align-items: start;
@@ -74,24 +71,22 @@ function Featured() {
   }
 
   return (
-    <StyledDiv>
-      <Carousel>
-        {featured.map((item) => {
-          return (
-            <Carousel.Item>
-              <Frame>
-                <PictureArea>
-                  <NavLink to={"/" + item.id}>
-                    <ResponsiveImage src={item.image} fluid thumbnail />
-                  </NavLink>
-                </PictureArea>
-              </Frame>
-              <Caption>{item.title}</Caption>
-            </Carousel.Item>
-          );
-        })}
-      </Carousel>
-    </StyledDiv>
+    <Carousel>
+      {featured.map((item) => {
+        return (
+          <Carousel.Item>
+            <Frame>
+              <PictureArea>
+                <NavLink to={"/" + item.id}>
+                  <ResponsiveImage src={item.image} fluid thumbnail />
+                </NavLink>
+              </PictureArea>
+            </Frame>
+            <Caption>{item.title}</Caption>
+          </Carousel.Item>
+        );
+      })}
+    </Carousel>
   );
 }
 
