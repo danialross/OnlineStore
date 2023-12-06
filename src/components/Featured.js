@@ -3,10 +3,11 @@ import { Image } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import styled from "styled-components";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const Caption = styled(Carousel.Caption)`
-  margin-top: 4rem;
+  font-size: 1.5rem;
 `;
 
 const Loader = styled.div`
@@ -18,36 +19,25 @@ const Loader = styled.div`
 `;
 
 const ResponsiveImage = styled(Image)`
-  width: 20rem;
-  object-fit: contain;
+  max-width: 25rem;
+  max-height: 15rem;
 `;
 
 const StyledDiv = styled.div`
-  width: 50rem;
-  height: 50rem;
   background-color: #edcac4;
 `;
 const Frame = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
-  width: 50rem;
-  height: auto;
+  height: 25rem;
+  width: 100vw;
+  padding-top: 3rem;
 `;
 
 const PictureArea = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80%;
-`;
-
-const CaptionArea = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 20%;
+  outline: 4px solid #89abe3; /* Set the outline width and color */
+  border-radius: 10px;
 `;
 
 function Featured() {
@@ -91,17 +81,12 @@ function Featured() {
             <Carousel.Item>
               <Frame>
                 <PictureArea>
-                  <ResponsiveImage
-                    src={item.image}
-                    alt={item.title}
-                    fluid
-                    rounded
-                  />
+                  <NavLink to={"/" + item.id}>
+                    <ResponsiveImage src={item.image} fluid thumbnail />
+                  </NavLink>
                 </PictureArea>
-                <CaptionArea>
-                  <Caption>{item.title}</Caption>
-                </CaptionArea>
               </Frame>
+              <Caption>{item.title}</Caption>
             </Carousel.Item>
           );
         })}
