@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
@@ -7,6 +8,9 @@ const port = process.env.PORT || 3000;
 const saltRounds = 10;
 const users = [];
 const blacklist = [];
+
+// Enable CORS for all routes
+app.use(cors());
 app.use(express.json());
 const secretKey = "super-secret-key";
 
