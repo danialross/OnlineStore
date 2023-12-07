@@ -30,6 +30,7 @@ const StyledDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding-bottom: 2rem;
 `;
 
 const StyledTitle = styled.h1`
@@ -64,7 +65,7 @@ const Frame = styled.div`
   height: 25rem;
   width: 100vw;
   padding-top: 1rem;
-  padding-right: 25rem;
+  padding-right: 24.5rem;
 `;
 
 function Featured() {

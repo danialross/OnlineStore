@@ -3,31 +3,16 @@ import styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import { NavLink } from "react-router-dom";
+import StyledButton from "./StyledButton";
 
 function Header(props) {
-  const [username] = useState(props.username);
+  const [username] = useState("");
 
   const StyledNavbar = styled(Navbar)`
     background-color: #89abe3;
     height: 5rem;
-  `;
-
-  const StyledButton = styled(Button)`
-    background-color: white;
-    color: #89abe3;
-    border-color: white;
-
-    &:hover {
-      background-color: #edcac4;
-      border-color: #edcac4;
-    }
-
-    &:active {
-      background-color: #edcac4;
-    }
   `;
 
   const StyledBrand = styled(NavLink)`
@@ -89,7 +74,10 @@ function Header(props) {
           </Nav>
 
           {username === "" ? (
-            <StyledButton variant="secondary">Login / Register</StyledButton>
+            <StyledButton
+              variant="secondary"
+              text="Login / Register"
+            ></StyledButton>
           ) : (
             <Dropdown>
               <StyledDropDown id="dropdown-basic" variant="secondary">
