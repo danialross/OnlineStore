@@ -13,18 +13,35 @@ const Caption = styled(Carousel.Caption)`
   border-radius: 10px;
 `;
 const StyledCarousel = styled(Carousel)`\
-margin-top: 2rem;
+
+padding-top:2rem;
 
   background-color: #89abe3;
   align-items: center;
   justify-content: center;
   width: 80%;
+  height: 30rem;
   border-radius: 50px;
+  outline: 2px solid white;
+
 `;
 const StyledDiv = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+const StyledTitle = styled.h1`
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  outline: 2px solid white;
+  border-radius: 10px;
+  background-color: #89abe3;
+  padding: 0.5rem;
+  width: 15rem;
 `;
 
 const Loader = styled.div`
@@ -81,6 +98,7 @@ function Featured() {
     </Loader>
   ) : (
     <StyledDiv>
+      <StyledTitle>Featured</StyledTitle>
       <StyledCarousel>
         {featured.map((item) => {
           return (
