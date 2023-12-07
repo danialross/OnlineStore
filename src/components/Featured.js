@@ -8,6 +8,23 @@ import { useState, useEffect } from "react";
 
 const Caption = styled(Carousel.Caption)`
   font-size: 1.5rem;
+  background-color: #89abe3;
+  outline: 2px solid white;
+  border-radius: 10px;
+`;
+const StyledCarousel = styled(Carousel)`\
+margin-top: 2rem;
+
+  background-color: #89abe3;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  border-radius: 50px;
+`;
+const StyledDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Loader = styled.div`
@@ -29,12 +46,8 @@ const Frame = styled.div`
   justify-content: center;
   height: 25rem;
   width: 100vw;
-  padding-top: 3rem;
-`;
-
-const PictureArea = styled.div`
-  outline: 4px solid #89abe3; /* Set the outline width and color */
-  border-radius: 10px;
+  padding-top: 1rem;
+  padding-right: 25rem;
 `;
 
 function Featured() {
@@ -60,33 +73,29 @@ function Featured() {
       });
   }, []);
 
-  if (isLoading) {
-    return (
-      <Loader>
-        <Spinner animation="border" role="status" variant="light">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </Loader>
-    );
-  }
-
-  return (
-    <Carousel>
-      {featured.map((item) => {
-        return (
-          <Carousel.Item>
-            <Frame>
-              <PictureArea>
+  return isLoading ? (
+    <Loader>
+      <Spinner animation="border" role="status" variant="light">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </Loader>
+  ) : (
+    <StyledDiv>
+      <StyledCarousel>
+        {featured.map((item) => {
+          return (
+            <Carousel.Item>
+              <Frame>
                 <NavLink to={"/" + item.id}>
                   <ResponsiveImage src={item.image} fluid thumbnail />
                 </NavLink>
-              </PictureArea>
-            </Frame>
-            <Caption>{item.title}</Caption>
-          </Carousel.Item>
-        );
-      })}
-    </Carousel>
+              </Frame>
+              <Caption>{item.title}</Caption>
+            </Carousel.Item>
+          );
+        })}
+      </StyledCarousel>
+    </StyledDiv>
   );
 }
 
