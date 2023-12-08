@@ -33,7 +33,7 @@ const StyledDiv = styled.div`
   padding-bottom: 2rem;
 `;
 
-const StyledTitle = styled.h1`
+const StyledTitle = styled.h2`
   text-align: center;
   margin-top: 1rem;
   margin-bottom: 1.5rem;
