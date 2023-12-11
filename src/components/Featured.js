@@ -24,12 +24,6 @@ const Caption = styled(Carousel.Caption)`
   border-radius: 10px;
 `;
 
-const Item = styled(Carousel.Item)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,7 +44,7 @@ const StyledTitle = styled.h2`
   width: 15rem;
 `;
 
-const ResponsiveImage = styled(Image)`
+const StyledImage = styled(Image)`
   max-width: 27rem;
   max-height: 17rem;
   margin-bottom: 7rem;
@@ -99,7 +93,7 @@ function Featured() {
             <Carousel.Item key={item.id}>
               <NavLink to={"/" + item.id}>
                 <Frame>
-                  <ResponsiveImage src={item.image} fluid thumbnail />
+                  <StyledImage src={item.image} fluid thumbnail />
                 </Frame>
 
                 <Caption>{item.title}</Caption>

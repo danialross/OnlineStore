@@ -4,7 +4,7 @@ function StyledButton(prop) {
   const StyledButton = styled(Button)`
     background-color: white;
     color: #89abe3;
-    border-color: white;
+    border-color: #89abe3;
 
     &:hover {
       background-color: #edcac4;

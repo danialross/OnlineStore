@@ -11,6 +11,7 @@ const StyledDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 1rem;
 `;
 
 const Row = styled.div`
@@ -25,22 +26,26 @@ const SearchDiv = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: row;
-  margin-bottom: 5rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
 `;
 
 const ItemsDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-evenly;
 `;
 
-const CardDiv = styled.div`
+const CustomCard = styled(Card)`
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 1rem;
-  height: 25rem;
-  width: 15rem;
+  justify-content: flex-end;
+
+  width: 20rem;
+  height: 30rem;
+
+  margin-bottom: 2rem;
 `;
 
 const Bar = styled.div`
@@ -54,23 +59,38 @@ const Bar = styled.div`
   border-radius: 10px;
 `;
 
-const Image = styled(Card.Img)`
-  padding: 1rem;
-`;
-
-const Label = styled(Form.Label)`
-  outline: 2px solid white;
-  border-radius: 10px;
-  padding: 1rem;
-  color: white;
-`;
-
 const StyledForm = styled(Form)`
   margin-right: 1rem;
 `;
 
 const SearchBar = styled(Form.Control)`
   color: #89abe3;
+`;
+
+const StyledImage = styled(Card.Img)`
+  object-fit: contain;
+  max-height: 20rem;
+  max-width: 20rem;
+  padding: 2rem;
+  margin-bottom: 1rem;
+`;
+
+const Frame = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+`;
+const Body = styled(Card.Body)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  max-height: 10rem;
+`;
+
+const Title = styled(Card.Title)`
+  text-align: center;
 `;
 
 function Catalog() {
@@ -108,22 +128,20 @@ function Catalog() {
             <ItemsDiv>
               {items.map((item) => {
                 return (
-                  <CardDiv>
-                    <Card>
+                  <CustomCard>
+                    <Frame>
                       <NavLink to={"/" + item.id}>
-                        <Image variant="top" src={item.image} />
+                        <StyledImage variant="top" src={item.image} />
                       </NavLink>
-                      <Card.Body>
-                        <Card.Title>{item.title}</Card.Title>
-                        <StyledDiv>
-                          <StyledButton
-                            variant="secondary"
-                            text="Add to cart"
-                          ></StyledButton>
-                        </StyledDiv>
-                      </Card.Body>
-                    </Card>
-                  </CardDiv>
+                    </Frame>
+
+                    <Body>
+                      <Title>{item.title}</Title>
+                      <StyledDiv>
+                        <StyledButton variant="secondary" text="Add to cart" />
+                      </StyledDiv>
+                    </Body>
+                  </CustomCard>
                 );
               })}
             </ItemsDiv>
