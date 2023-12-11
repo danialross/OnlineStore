@@ -2,22 +2,12 @@ import StyledButton from "./StyledButton";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
-import Spinner from "react-bootstrap/Spinner";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
+import Loader from "./Loader";
+import Form from "react-bootstrap/Form";
 
 const StyledDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const CustomButton = styled(StyledButton)`
-  border-color: black;
-`;
-
-const LoadDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,11 +21,13 @@ const Row = styled.div`
 `;
 
 const SearchDiv = styled.div`
-  display: row;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 3rem;
+  justify-content: flex-start;
+  flex-direction: row;
+  margin-bottom: 5rem;
 `;
+
 const ItemsDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -62,15 +54,23 @@ const Bar = styled.div`
   border-radius: 10px;
 `;
 
-const SearchInput = styled.input`
-  margin-right: 1rem;
-  border-radius: 5px;
-  width: 30rem;
-  color: #89abe3;
-`;
-
 const Image = styled(Card.Img)`
   padding: 1rem;
+`;
+
+const Label = styled(Form.Label)`
+  outline: 2px solid white;
+  border-radius: 10px;
+  padding: 1rem;
+  color: white;
+`;
+
+const StyledForm = styled(Form)`
+  margin-right: 1rem;
+`;
+
+const SearchBar = styled(Form.Control)`
+  color: #89abe3;
 `;
 
 function Catalog() {
@@ -97,15 +97,13 @@ function Catalog() {
       <Bar>
         <Row>
           <SearchDiv>
-            <SearchInput placeholder="Search For Item"></SearchInput>
+            <StyledForm>
+              <SearchBar placeholder="Search For Item" />
+            </StyledForm>
             <StyledButton variant="secondary" text="Search" />
           </SearchDiv>
           {isLoading ? (
-            <LoadDiv>
-              <Spinner animation="border" role="status" variant="light">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </LoadDiv>
+            <Loader />
           ) : (
             <ItemsDiv>
               {items.map((item) => {
@@ -118,10 +116,10 @@ function Catalog() {
                       <Card.Body>
                         <Card.Title>{item.title}</Card.Title>
                         <StyledDiv>
-                          <CustomButton
+                          <StyledButton
                             variant="secondary"
                             text="Add to cart"
-                          ></CustomButton>
+                          ></StyledButton>
                         </StyledDiv>
                       </Card.Body>
                     </Card>

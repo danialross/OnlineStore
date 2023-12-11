@@ -1,21 +1,13 @@
 import Carousel from "react-bootstrap/Carousel";
-import { Image } from "react-bootstrap";
-import Spinner from "react-bootstrap/Spinner";
+import Image from "react-bootstrap/Image";
 import styled from "styled-components";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Loader from "./Loader";
 
-const Caption = styled(Carousel.Caption)`
-  font-size: 1.5rem;
-  background-color: #89abe3;
-  outline: 2px solid white;
-  border-radius: 10px;
-`;
-const StyledCarousel = styled(Carousel)`\
-
-padding-top:2rem;
-
+const StyledCarousel = styled(Carousel)`
+  padding-top: 2rem;
   background-color: #89abe3;
   align-items: center;
   justify-content: center;
@@ -23,8 +15,21 @@ padding-top:2rem;
   height: 30rem;
   border-radius: 50px;
   outline: 2px solid white;
-
 `;
+
+const Caption = styled(Carousel.Caption)`
+  font-size: 1.5rem;
+  background-color: #89abe3;
+  outline: 2px solid white;
+  border-radius: 10px;
+`;
+
+const Item = styled(Carousel.Item)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -45,27 +50,19 @@ const StyledTitle = styled.h2`
   width: 15rem;
 `;
 
-const Loader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #edcac4;
-`;
-
 const ResponsiveImage = styled(Image)`
-  max-width: 25rem;
-  max-height: 15rem;
+  max-width: 27rem;
+  max-height: 17rem;
+  margin-bottom: 7rem;
 `;
 
 const Frame = styled.div`
   display: flex;
-  align-items: start;
+  align-items: center;
   justify-content: center;
-  height: 25rem;
-  width: 100vw;
+  flex-direction: column;
   padding-top: 1rem;
-  padding-right: 24.5rem;
+  padding-bottom: 1rem;
 `;
 
 function Featured() {
@@ -92,24 +89,21 @@ function Featured() {
   }, []);
 
   return isLoading ? (
-    <Loader>
-      <Spinner animation="border" role="status" variant="light">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    </Loader>
+    <Loader />
   ) : (
     <StyledDiv>
       <StyledTitle>Featured</StyledTitle>
       <StyledCarousel>
         {featured.map((item) => {
           return (
-            <Carousel.Item>
-              <Frame>
-                <NavLink to={"/" + item.id}>
+            <Carousel.Item key={item.id}>
+              <NavLink to={"/" + item.id}>
+                <Frame>
                   <ResponsiveImage src={item.image} fluid thumbnail />
-                </NavLink>
-              </Frame>
-              <Caption>{item.title}</Caption>
+                </Frame>
+
+                <Caption>{item.title}</Caption>
+              </NavLink>
             </Carousel.Item>
           );
         })}
