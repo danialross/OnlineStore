@@ -39,13 +39,13 @@ const ItemsDiv = styled.div`
 
 const CustomCard = styled(Card)`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-
   width: 20rem;
   height: 30rem;
-
   margin-bottom: 2rem;
+  padding-bottom: 2rem;
 `;
 
 const Bar = styled.div`
@@ -69,28 +69,27 @@ const SearchBar = styled(Form.Control)`
 
 const StyledImage = styled(Card.Img)`
   object-fit: contain;
-  max-height: 20rem;
-  max-width: 20rem;
+  max-height: 18rem;
   padding: 2rem;
-  margin-bottom: 1rem;
 `;
 
-const Frame = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  flex-direction: column;
-`;
 const Body = styled(Card.Body)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  max-height: 10rem;
 `;
 
 const Title = styled(Card.Title)`
   text-align: center;
+  color: #89abe3;
+`;
+
+const Text = styled(Card.Text)`
+  color: #89abe3;
+`;
+
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
 `;
 
 function Catalog() {
@@ -129,18 +128,14 @@ function Catalog() {
               {items.map((item) => {
                 return (
                   <CustomCard>
-                    <Frame>
-                      <NavLink to={"/" + item.id}>
-                        <StyledImage variant="top" src={item.image} />
-                      </NavLink>
-                    </Frame>
-
-                    <Body>
-                      <Title>{item.title}</Title>
-                      <StyledDiv>
-                        <StyledButton variant="secondary" text="Add to cart" />
-                      </StyledDiv>
-                    </Body>
+                    <StyledNavLink to={"/" + item.id}>
+                      <StyledImage variant="top" src={item.image} />
+                      <Body>
+                        <Title>{item.title}</Title>
+                        <Text>${item.price.toFixed(2)}</Text>
+                      </Body>
+                    </StyledNavLink>
+                    <StyledButton variant="secondary" text="Add to cart" />
                   </CustomCard>
                 );
               })}

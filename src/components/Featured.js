@@ -18,10 +18,13 @@ const StyledCarousel = styled(Carousel)`
 `;
 
 const Caption = styled(Carousel.Caption)`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background-color: #89abe3;
   outline: 2px solid white;
   border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
 `;
 
 const StyledDiv = styled.div`
@@ -45,18 +48,15 @@ const StyledTitle = styled.h2`
 `;
 
 const StyledImage = styled(Image)`
-  max-width: 27rem;
-  max-height: 17rem;
-  margin-bottom: 7rem;
+  max-height: 18rem;
+  margin-bottom: 8rem;
 `;
 
 const Frame = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex-direction: column;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 `;
 
 function Featured() {
@@ -94,9 +94,8 @@ function Featured() {
               <NavLink to={"/" + item.id}>
                 <Frame>
                   <StyledImage src={item.image} fluid thumbnail />
+                  <Caption>{item.title}</Caption>
                 </Frame>
-
-                <Caption>{item.title}</Caption>
               </NavLink>
             </Carousel.Item>
           );
