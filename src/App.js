@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+import Panel from "./components/Panel";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 
@@ -11,17 +11,17 @@ function App() {
           path="/"
           exact
           element={
-            <Header username={mockUsername}>
+            <Panel username={mockUsername}>
               <HomePage />
-            </Header>
+            </Panel>
           }
         />
         <Route
           path="/sale"
           element={
-            <Header username={mockUsername}>
+            <Panel username={mockUsername}>
               <h1>empty</h1>
-            </Header>
+            </Panel>
           }
         />
       </Routes>
