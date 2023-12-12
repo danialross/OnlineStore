@@ -8,59 +8,59 @@ import { NavLink } from "react-router-dom";
 import StyledButton from "./StyledButton";
 import Footer from "./Footer";
 
+const StyledNavbar = styled(Navbar)`
+  background-color: #89abe3;
+  height: 5rem;
+`;
+
+const StyledBrand = styled(NavLink)`
+  text-decoration: none;
+  font-size: 2rem;
+  color: white;
+
+  margin-right: 5rem;
+
+  &:hover {
+    color: #edcac4;
+  }
+`;
+
+const StyledLink = styled(NavLink)`
+  text-decoration: none;
+  font-size: 1.3rem;
+  color: white;
+  margin-right: 2rem;
+
+  &:hover {
+    color: #edcac4;
+  }
+
+  &.active {
+    color: #edcac4;
+  }
+`;
+
+const StyledDropDown = styled(Dropdown.Toggle)`
+  background-color: white;
+  color: #89abe3;
+  border-radius: 5px;
+  border-color: white;
+
+  &:hover {
+    color: white;
+    background-color: #edcac4;
+    border-color: #edcac4;
+  }
+
+  &:active {
+    color: white;
+    background-color: #edcac4;
+    border-color: #edcac4;
+  }
+`;
+
 function Panel(props) {
   const [username] = useState("");
-
-  const StyledNavbar = styled(Navbar)`
-    background-color: #89abe3;
-    height: 5rem;
-  `;
-
-  const StyledBrand = styled(NavLink)`
-    text-decoration: none;
-    font-size: 2rem;
-    color: white;
-
-    margin-right: 5rem;
-
-    &:hover {
-      color: #edcac4;
-    }
-  `;
-
-  const StyledLink = styled(NavLink)`
-    text-decoration: none;
-    font-size: 1.3rem;
-    color: white;
-    margin-right: 2rem;
-
-    &:hover {
-      color: #edcac4;
-    }
-
-    &.active {
-      color: #edcac4;
-    }
-  `;
-
-  const StyledDropDown = styled(Dropdown.Toggle)`
-    background-color: white;
-    color: #89abe3;
-    border-radius: 5px;
-    border-color: white;
-
-    &:hover {
-      color: white;
-      background-color: #edcac4;
-      border-color: #edcac4;
-    }
-
-    &:active {
-      color: white;
-      background-color: #edcac4;
-      border-color: #edcac4;
-    }
-  `;
 
   return (
     <>

@@ -56,6 +56,10 @@ const SearchBar = styled(Form.Control)`
   &:focus {
     color: #89abe3;
   }
+
+  &::placeholder {
+    color: #89abe3;
+  }
 `;
 
 const Close = styled(CloseButton)`
@@ -109,6 +113,7 @@ function Catalog() {
   const server = "http://localhost:3000/items";
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleChange = (e) => {
@@ -121,16 +126,25 @@ function Catalog() {
     }
   };
 
-  const handleSearch = (e) => {
-    // request items
+  const handleSearch = () => {
+    console.log("searched clicked");
+    const newFiltered = items.filter((item) =>
+      item.title.toLowerCase().includes(query)
+    );
+    setFiltered(newFiltered);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSearch();
   };
 
   useEffect(() => {
     axios
       .get(server)
       .then((res) => {
-        console.log(res.data.items);
         setItems(res.data.items);
+        setFiltered(res.data.items);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -143,7 +157,7 @@ function Catalog() {
       <Bar>
         <Row>
           <SearchDiv>
-            <StyledForm>
+            <StyledForm onSubmit={handleSubmit}>
               <SearchBar
                 placeholder="Search For Item"
                 onChange={handleChange}
@@ -161,9 +175,9 @@ function Catalog() {
             <Loader />
           ) : (
             <ItemsDiv>
-              {items.map((item) => {
+              {filtered.map((item) => {
                 return (
-                  <CustomCard>
+                  <CustomCard key={item.id}>
                     <StyledNavLink to={"/" + item.id}>
                       <StyledImage variant="top" src={item.image} />
                       <Body>

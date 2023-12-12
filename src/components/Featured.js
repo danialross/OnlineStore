@@ -75,7 +75,6 @@ function Featured() {
         }
         setFeatured(picked3);
         setIsLoading(false);
-        console.log(picked3);
       })
       .catch((err) => {
         console.error("Axios error:", err);
