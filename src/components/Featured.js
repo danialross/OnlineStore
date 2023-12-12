@@ -1,9 +1,9 @@
-import Carousel from "react-bootstrap/Carousel";
-import Image from "react-bootstrap/Image";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
+import Carousel from "react-bootstrap/Carousel";
+import Image from "react-bootstrap/Image";
 import Loader from "./Loader";
 
 const StyledCarousel = styled(Carousel)`

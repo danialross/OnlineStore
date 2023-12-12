@@ -1,6 +1,6 @@
+import styled from "styled-components";
 import Catalog from "../components/Catalog";
 import Featured from "../components/Featured";
-import styled from "styled-components";
 
 function HomePage() {
   const MainDiv = styled.div`

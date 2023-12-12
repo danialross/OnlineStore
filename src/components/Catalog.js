@@ -1,17 +1,29 @@
-import StyledButton from "./StyledButton";
-import styled from "styled-components";
 import { useState, useEffect } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import StyledButton from "./StyledButton";
+import Loader from "./Loader";
 import { NavLink } from "react-router-dom";
 import Card from "react-bootstrap/Card";
-import axios from "axios";
-import Loader from "./Loader";
 import Form from "react-bootstrap/Form";
+import CloseButton from "react-bootstrap/CloseButton";
 
 const StyledDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding-bottom: 2rem;
+`;
+
+const Bar = styled.div`
+  width: 80%;
+  outline: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #89abe3;
+  padding: 1rem;
+  border-radius: 10px;
 `;
 
 const Row = styled.div`
@@ -28,6 +40,26 @@ const SearchDiv = styled.div`
   flex-direction: row;
   margin-bottom: 2rem;
   margin-top: 1rem;
+`;
+
+const StyledForm = styled(Form)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  margin-right: 1rem;
+`;
+
+const SearchBar = styled(Form.Control)`
+  color: #89abe3;
+
+  &:focus {
+    color: #89abe3;
+  }
+`;
+
+const Close = styled(CloseButton)`
+  margin-left: -2rem;
 `;
 
 const ItemsDiv = styled.div`
@@ -48,23 +80,8 @@ const CustomCard = styled(Card)`
   padding-bottom: 2rem;
 `;
 
-const Bar = styled.div`
-  width: 80%;
-  outline: 2px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #89abe3;
-  padding: 1rem;
-  border-radius: 10px;
-`;
-
-const StyledForm = styled(Form)`
-  margin-right: 1rem;
-`;
-
-const SearchBar = styled(Form.Control)`
-  color: #89abe3;
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
 `;
 
 const StyledImage = styled(Card.Img)`
@@ -88,15 +105,25 @@ const Text = styled(Card.Text)`
   color: #89abe3;
 `;
 
-const StyledNavLink = styled(NavLink)`
-  text-decoration: none;
-`;
-
 function Catalog() {
   const server = "http://localhost:3000/items";
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const handleClear = (e) => {
+    if (query !== "") {
+      setQuery("");
+    }
+  };
+
+  const handleSearch = (e) => {
+    // request items
+  };
 
   useEffect(() => {
     axios
@@ -117,9 +144,18 @@ function Catalog() {
         <Row>
           <SearchDiv>
             <StyledForm>
-              <SearchBar placeholder="Search For Item" />
+              <SearchBar
+                placeholder="Search For Item"
+                onChange={handleChange}
+                value={query}
+              />
+              <Close onClick={handleClear} />
             </StyledForm>
-            <StyledButton variant="secondary" text="Search" />
+            <StyledButton
+              variant="secondary"
+              text="Search"
+              onClick={handleSearch}
+            />
           </SearchDiv>
           {isLoading ? (
             <Loader />
