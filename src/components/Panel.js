@@ -6,6 +6,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Dropdown from "react-bootstrap/Dropdown";
 import { NavLink } from "react-router-dom";
 import StyledButton from "./StyledButton";
+import Footer from "./Footer";
 
 function Panel(props) {
   const [username] = useState("");
@@ -95,6 +96,7 @@ function Panel(props) {
         </Container>
       </StyledNavbar>
       {props.children}
+      <Footer />
     </>
   );
 }

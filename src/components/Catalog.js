@@ -11,6 +11,7 @@ const StyledDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 2rem;
 `;
 
 const Row = styled.div`
