@@ -7,7 +7,6 @@ function HomePage() {
     background-color: #edcac4;
     height: auto;
     width: 100wv;
-    padding-bottom: 2rem;
   `;
   return (
     <MainDiv>

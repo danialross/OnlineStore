@@ -11,7 +11,6 @@ const StyledDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1rem;
 `;
 
 const Row = styled.div`
@@ -53,7 +52,7 @@ const Bar = styled.div`
   outline: 2px solid white;
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: center;
   background-color: #89abe3;
   padding: 1rem;
   border-radius: 10px;
