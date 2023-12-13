@@ -29,7 +29,7 @@ const Bar = styled.div`
 const Row = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 `;
 
@@ -40,6 +40,11 @@ const SearchDiv = styled.div`
   flex-direction: row;
   margin-bottom: 2rem;
   margin-top: 1rem;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  border-radius: 10px;
+  padding: 1rem;
+  outline: 2px solid white;
 `;
 
 const StyledForm = styled(Form)`
@@ -52,6 +57,7 @@ const StyledForm = styled(Form)`
 
 const SearchBar = styled(Form.Control)`
   color: #89abe3;
+  width: 100%;
 
   &:focus {
     color: #89abe3;
@@ -64,6 +70,13 @@ const SearchBar = styled(Form.Control)`
 
 const Close = styled(CloseButton)`
   margin-left: -2rem;
+`;
+
+const LoaderDiv = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const ItemsDiv = styled.div`
@@ -112,6 +125,7 @@ const Text = styled(Card.Text)`
 function Catalog() {
   const server = "http://localhost:3000/items";
   const [query, setQuery] = useState("");
+  const [lastQuery, setLastQuery] = useState("");
   const [items, setItems] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -127,11 +141,16 @@ function Catalog() {
   };
 
   const handleSearch = () => {
-    console.log("searched clicked");
-    const newFiltered = items.filter((item) =>
-      item.title.toLowerCase().includes(query)
-    );
-    setFiltered(newFiltered);
+    if (lastQuery !== query) {
+      console.log("filtered");
+      const newFiltered = items.filter((item) =>
+        item.title.toLowerCase().includes(query)
+      );
+      setLastQuery(query);
+      setFiltered(newFiltered);
+    } else {
+      console.log("didnt filter");
+    }
   };
 
   const handleSubmit = (e) => {
@@ -172,7 +191,9 @@ function Catalog() {
             />
           </SearchDiv>
           {isLoading ? (
-            <Loader />
+            <LoaderDiv>
+              <Loader />
+            </LoaderDiv>
           ) : (
             <ItemsDiv>
               {filtered.map((item) => {

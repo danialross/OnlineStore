@@ -6,27 +6,6 @@ import Carousel from "react-bootstrap/Carousel";
 import Image from "react-bootstrap/Image";
 import Loader from "./Loader";
 
-const StyledCarousel = styled(Carousel)`
-  padding-top: 2rem;
-  background-color: #89abe3;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-  height: 30rem;
-  border-radius: 50px;
-  outline: 2px solid white;
-`;
-
-const Caption = styled(Carousel.Caption)`
-  font-size: 1.2rem;
-  background-color: #89abe3;
-  outline: 2px solid white;
-  border-radius: 10px;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-`;
-
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,14 +28,41 @@ const StyledTitle = styled.h2`
 
 const StyledImage = styled(Image)`
   max-height: 18rem;
+  max-width: 18rem;
   margin-bottom: 8rem;
-`;
-
-const Frame = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+`;
+
+const StyledCarousel = styled(Carousel)`
+  padding-top: 2rem;
+  background-color: #89abe3;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 30rem;
+  border-radius: 50px;
+  outline: 2px solid white;
+`;
+
+const Frame = styled(NavLink)`
+  display: flex;
+  justify-content: flex-end;
   flex-direction: column;
+  align-items: center; /* Align items to the bottom */
+`;
+
+const Caption = styled(Carousel.Caption)`
+  background-color: #89abe3;
+  outline: 2px solid white;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-size: 1.7rem;
 `;
 
 function Featured() {
@@ -90,12 +96,10 @@ function Featured() {
         {featured.map((item) => {
           return (
             <Carousel.Item key={item.id}>
-              <NavLink to={"/" + item.id}>
-                <Frame>
-                  <StyledImage src={item.image} fluid thumbnail />
-                  <Caption>{item.title}</Caption>
-                </Frame>
-              </NavLink>
+              <Frame to={"/" + item.id}>
+                <StyledImage src={item.image} fluid thumbnail />
+                <Caption>{item.title}</Caption>
+              </Frame>
             </Carousel.Item>
           );
         })}
