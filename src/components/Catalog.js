@@ -26,22 +26,30 @@ const Bar = styled.div`
   border-radius: 10px;
 `;
 
-const Row = styled.div`
+const Col = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
+  width: 100%;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;
 `;
 
 const SearchDiv = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   flex-direction: row;
   margin-bottom: 2rem;
   margin-top: 1rem;
-  margin-left: 3rem;
-  margin-right: 3rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
   border-radius: 10px;
   padding: 1rem;
   outline: 2px solid white;
@@ -72,18 +80,12 @@ const Close = styled(CloseButton)`
   margin-left: -2rem;
 `;
 
-const LoaderDiv = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
 const ItemsDiv = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
+  width: 92%;
 `;
 
 const CustomCard = styled(Card)`
@@ -93,6 +95,8 @@ const CustomCard = styled(Card)`
   justify-content: flex-end;
   width: 20rem;
   height: 30rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
 `;
@@ -174,26 +178,26 @@ function Catalog() {
   return (
     <StyledDiv>
       <Bar>
-        <Row>
-          <SearchDiv>
-            <StyledForm onSubmit={handleSubmit}>
-              <SearchBar
-                placeholder="Search For Item"
-                onChange={handleChange}
-                value={query}
+        <Col>
+          <Row>
+            <SearchDiv>
+              <StyledForm onSubmit={handleSubmit}>
+                <SearchBar
+                  placeholder="Search For Item"
+                  onChange={handleChange}
+                  value={query}
+                />
+                <Close onClick={handleClear} />
+              </StyledForm>
+              <StyledButton
+                variant="secondary"
+                text="🔍"
+                onClick={handleSearch}
               />
-              <Close onClick={handleClear} />
-            </StyledForm>
-            <StyledButton
-              variant="secondary"
-              text="Search"
-              onClick={handleSearch}
-            />
-          </SearchDiv>
+            </SearchDiv>
+          </Row>
           {isLoading ? (
-            <LoaderDiv>
-              <Loader />
-            </LoaderDiv>
+            <Loader />
           ) : (
             <ItemsDiv>
               {filtered.map((item) => {
@@ -212,7 +216,7 @@ function Catalog() {
               })}
             </ItemsDiv>
           )}
-        </Row>
+        </Col>
       </Bar>
     </StyledDiv>
   );

@@ -6,7 +6,7 @@ const LoadDiv = styled.div`
   align-items: center;
   justify-content: center;
   height: 20rem;
-  width: auto;
+  width: 100%;
 `;
 
 const CustomSpinner = styled(Spinner)`
