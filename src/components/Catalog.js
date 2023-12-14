@@ -32,14 +32,14 @@ const Col = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 90%;
 `;
 
 const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 90%;
+  width: 103%;
 `;
 
 const SearchDiv = styled.div`
@@ -96,8 +96,8 @@ const CustomCard = styled(Card)`
   justify-content: flex-end;
   width: 20rem;
   height: 30rem;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-right: 5px;
+  margin-left: 5px;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
 `;

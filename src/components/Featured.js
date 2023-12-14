@@ -27,19 +27,15 @@ const StyledTitle = styled.h2`
 `;
 
 const StyledImage = styled(Image)`
-  max-height: 18rem;
-  max-width: 18rem;
+  object-fit: contain;
   margin-bottom: 8rem;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  max-height: 18rem;
 `;
 
 const StyledCarousel = styled(Carousel)`
   padding-top: 2rem;
+  padding-bottom: 2rem;
   background-color: #89abe3;
-  align-items: center;
-  justify-content: center;
   width: 80%;
   height: 30rem;
   border-radius: 50px;
@@ -50,7 +46,9 @@ const Frame = styled(NavLink)`
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
-  align-items: center; /* Align items to the bottom */
+  align-items: center;
+  width: 100%;
+  height: 26rem;
 `;
 
 const Caption = styled(Carousel.Caption)`
