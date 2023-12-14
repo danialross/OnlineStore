@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import CloseButton from "react-bootstrap/CloseButton";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -51,7 +52,7 @@ const SearchDiv = styled.div`
   margin-left: 2rem;
   margin-right: 2rem;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 1.5rem;
   outline: 2px solid white;
 `;
 
@@ -85,7 +86,7 @@ const ItemsDiv = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
-  width: 92%;
+  width: 100%;
 `;
 
 const CustomCard = styled(Card)`
@@ -191,8 +192,8 @@ function Catalog() {
               </StyledForm>
               <StyledButton
                 variant="secondary"
-                text="🔍"
                 onClick={handleSearch}
+                icon={faSearch}
               />
             </SearchDiv>
           </Row>
