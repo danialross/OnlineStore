@@ -11,25 +11,39 @@ import Footer from "./Footer";
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
   height: 5rem;
+  outline: 8px solid white;
 `;
 
 const StyledBrand = styled(NavLink)`
   text-decoration: none;
   font-size: 2rem;
   color: white;
-
-  margin-right: 5rem;
+  white-space: nowrap;
+  margin-right: 3rem;
 
   &:hover {
     color: #edcac4;
   }
 `;
 
+const StyledNav = styled(Nav)`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+`;
+
 const StyledLink = styled(NavLink)`
   text-decoration: none;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: white;
-  margin-right: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-right: 1em;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  height: 6rem;
 
   &:hover {
     color: #edcac4;
@@ -37,6 +51,27 @@ const StyledLink = styled(NavLink)`
 
   &.active {
     color: #edcac4;
+  }
+
+  &:not(:last-child) {
+    text-decoration: none;
+    font-size: 1.4rem;
+    color: white;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-right: 2em;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    height: 6rem;
+
+    &:hover {
+      color: #edcac4;
+    }
+
+    &.active {
+      color: #edcac4;
+    }
   }
 `;
 
@@ -60,19 +95,18 @@ const StyledDropDown = styled(Dropdown.Toggle)`
 `;
 
 function Panel(props) {
-  const [username] = useState("");
+  const [username] = useState("John Wick");
 
   return (
     <>
-      <StyledNavbar>
+      <StyledNavbar fixed="top">
         <Container>
           <StyledBrand to="/">Online Store</StyledBrand>
 
-          <Nav className="me-auto">
-            <StyledLink to="/forhim">Gifts for Him</StyledLink>
-            <StyledLink to="/forher">Gifts for Her</StyledLink>
-            <StyledLink to="/under10">Gifts for under $10</StyledLink>
-          </Nav>
+          <StyledNav>
+            <StyledLink to="/for-him">For Him</StyledLink>
+            <StyledLink to="/for-her">For Her</StyledLink>
+          </StyledNav>
 
           {username === "" ? (
             <StyledButton

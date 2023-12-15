@@ -11,6 +11,7 @@ const StyledDiv = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 5.5rem;
   padding-bottom: 2rem;
 `;
 
@@ -55,12 +56,15 @@ const Caption = styled(Carousel.Caption)`
   background-color: #89abe3;
   outline: 2px solid white;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 2rem;
   display: flex;
   align-items: center;
   text-align: center;
   justify-content: center;
-  font-size: 1.7rem;
+  font-size: 1.5vw;
+  max-width: 100%;
+  height: 5rem;
+  overflow: hidden;
 `;
 
 function Featured() {
