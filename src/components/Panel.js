@@ -94,6 +94,22 @@ const StyledDropDown = styled(Dropdown.Toggle)`
   }
 `;
 
+const StyledItem = styled(Dropdown.Item)`
+  color: #89abe3;
+
+  &:hover {
+    color: white;
+    background-color: #edcac4;
+    border-color: #edcac4;
+  }
+
+  &:active {
+    color: white;
+    background-color: #edcac4;
+    border-color: #edcac4;
+  }
+`;
+
 function Panel(props) {
   const [username] = useState("John Wick");
 
@@ -120,10 +136,10 @@ function Panel(props) {
               </StyledDropDown>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1">Cart</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Settings</Dropdown.Item>
+                <StyledItem href="#/action-1">Cart</StyledItem>
+                <StyledItem href="#/action-2">Settings</StyledItem>
                 <Dropdown.Divider />
-                <Dropdown.Item href="#/action-3">Logout</Dropdown.Item>
+                <StyledItem href="#/action-3">Logout</StyledItem>
               </Dropdown.Menu>
             </Dropdown>
           )}
