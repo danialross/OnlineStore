@@ -6,6 +6,10 @@ import Carousel from "react-bootstrap/Carousel";
 import Image from "react-bootstrap/Image";
 import Loader from "./Loader";
 
+const LoaderDiv = styled.div`
+  margin-top: 5rem;
+`;
+
 const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -90,7 +94,9 @@ function Featured() {
   }, []);
 
   return isLoading ? (
-    <Loader />
+    <LoaderDiv>
+      <Loader />
+    </LoaderDiv>
   ) : (
     <StyledDiv>
       <StyledTitle>Featured</StyledTitle>

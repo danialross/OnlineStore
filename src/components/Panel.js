@@ -4,9 +4,12 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Dropdown from "react-bootstrap/Dropdown";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
 import { NavLink } from "react-router-dom";
 import StyledButton from "./StyledButton";
 import Footer from "./Footer";
+import { Button } from "react-bootstrap";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
@@ -110,8 +113,80 @@ const StyledItem = styled(Dropdown.Item)`
   }
 `;
 
+const StyledGroup = styled(Form.Group)`
+  margin-bottom: 1rem;
+`;
+
+const ClickableText = styled.div`
+  margin-top: 1rem;
+
+  width: 4rem;
+  color: blue;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const StyledFooter = styled(Modal.Footer)`
+  display: flex;
+  justify-content: space-between;
+`;
+
 function Panel(props) {
-  const [username] = useState("John Wick");
+  const [username, setUsername] = useState("");
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [retyped, setRetyped] = useState("");
+
+  const clearInput = (isLoggingIn) => {
+    if (isLoggingIn === true) {
+      setEmail("");
+      setPassword("");
+    } else {
+      setEmail("");
+      setPassword("");
+      setRetyped("");
+    }
+  };
+
+  const handleShowLogin = () => {
+    setShowLogin(true);
+  };
+  const handleCloseLogin = () => {
+    setShowLogin(false);
+    clearInput(true);
+  };
+
+  const handleShowRegister = () => {
+    setShowRegister(true);
+  };
+  const handleCloseRegister = () => {
+    setShowRegister(false);
+    clearInput(false);
+  };
+
+  const handleLogin = () => {
+    handleCloseLogin();
+    //add logic to logging in
+  };
+
+  const handleChangeModal = () => {
+    handleCloseLogin();
+    handleShowRegister();
+  };
+
+  const handleRegister = () => {
+    handleCloseRegister();
+    //add logic to registering
+  };
+
+  const handleChange = (setter) => (e) => {
+    setter(e.target.value);
+  };
 
   return (
     <>
@@ -125,10 +200,98 @@ function Panel(props) {
           </StyledNav>
 
           {username === "" ? (
-            <StyledButton
-              variant="secondary"
-              text="Login / Register"
-            ></StyledButton>
+            <>
+              <StyledButton
+                variant="secondary"
+                text="Login"
+                onClick={handleShowLogin}
+              ></StyledButton>
+
+              <Modal show={showLogin} onHide={handleCloseLogin}>
+                <Modal.Header>
+                  <Modal.Title>Login</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <StyledGroup>
+                      <Form.Label>Email address</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="name@example.com"
+                        value={email}
+                        onChange={handleChange(setEmail)}
+                      />
+                    </StyledGroup>
+                    <StyledGroup>
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        value={password}
+                        onChange={handleChange(setPassword)}
+                      />
+                    </StyledGroup>
+
+                    <ClickableText onClick={handleChangeModal}>
+                      Register
+                    </ClickableText>
+                  </Form>
+                </Modal.Body>
+                <StyledFooter>
+                  <Button variant="danger" onClick={handleCloseLogin}>
+                    Close
+                  </Button>
+                  <StyledButton
+                    variant="secondary"
+                    text="Login"
+                    onClick={handleLogin}
+                  />
+                </StyledFooter>
+              </Modal>
+              <Modal show={showRegister} onHide={handleCloseRegister}>
+                <Modal.Header>
+                  <Modal.Title>Register</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <StyledGroup>
+                      <Form.Label>Email address</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="name@example.com"
+                        value={email}
+                        onChange={handleChange(setEmail)}
+                      />
+                    </StyledGroup>
+                    <StyledGroup>
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        value={password}
+                        onChange={handleChange(setPassword)}
+                      />
+                    </StyledGroup>
+                    <StyledGroup>
+                      <Form.Label>Re-type Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        value={retyped}
+                        onChange={handleChange(setRetyped)}
+                      />
+                    </StyledGroup>
+                  </Form>
+                </Modal.Body>
+                <StyledFooter>
+                  <Button variant="danger" onClick={handleCloseRegister}>
+                    Close
+                  </Button>
+                  <StyledButton
+                    variant="secondary"
+                    text="Register"
+                    onClick={handleRegister}
+                  />
+                </StyledFooter>
+              </Modal>
+            </>
           ) : (
             <Dropdown>
               <StyledDropDown id="dropdown-basic" variant="secondary">
