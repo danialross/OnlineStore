@@ -10,6 +10,7 @@ import { NavLink } from "react-router-dom";
 import StyledButton from "./StyledButton";
 import Footer from "./Footer";
 import { Button } from "react-bootstrap";
+import axios from "axios";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
@@ -134,20 +135,28 @@ const StyledFooter = styled(Modal.Footer)`
   justify-content: space-between;
 `;
 
+const EmptyControl = styled(Form.Control)`
+  border-color: red;
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+`;
+
 function Panel(props) {
   const [username, setUsername] = useState("");
+  const [user, setUser] = useState({});
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [retyped, setRetyped] = useState("");
 
   const clearInput = (isLoggingIn) => {
     if (isLoggingIn === true) {
-      setEmail("");
+      setUsername("");
       setPassword("");
     } else {
-      setEmail("");
+      setUsername("");
       setPassword("");
       setRetyped("");
     }
@@ -164,14 +173,33 @@ function Panel(props) {
   const handleShowRegister = () => {
     setShowRegister(true);
   };
+
   const handleCloseRegister = () => {
     setShowRegister(false);
     clearInput(false);
   };
 
   const handleLogin = () => {
-    handleCloseLogin();
-    //add logic to logging in
+    const url = "http://localhost:3000/login";
+
+    const login = { username: username, password: password };
+
+    axios
+      .post(url, login)
+      .then((res) => {
+        if (res.data !== "") {
+          const userData = { username: username, token: res.data.token };
+          setUser(userData);
+          handleCloseLogin();
+        } else {
+          console.log(user);
+          handleCloseLogin();
+          return;
+        }
+      })
+      .catch((err) => {
+        console.err({ error: err });
+      });
   };
 
   const handleChangeModal = () => {
@@ -185,7 +213,7 @@ function Panel(props) {
   };
 
   const handleChange = (setter) => (e) => {
-    setter(e.target.value);
+    setter(e.target.value.trim());
   };
 
   return (
@@ -199,7 +227,7 @@ function Panel(props) {
             <StyledLink to="/for-her">For Her</StyledLink>
           </StyledNav>
 
-          {username === "" ? (
+          {user.username === undefined ? (
             <>
               <StyledButton
                 variant="secondary"
@@ -214,12 +242,12 @@ function Panel(props) {
                 <Modal.Body>
                   <Form>
                     <StyledGroup>
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label>Username</Form.Label>
+
                       <Form.Control
-                        type="email"
-                        placeholder="name@example.com"
-                        value={email}
-                        onChange={handleChange(setEmail)}
+                        type="text"
+                        value={username}
+                        onChange={handleChange(setUsername)}
                       />
                     </StyledGroup>
                     <StyledGroup>
@@ -254,12 +282,11 @@ function Panel(props) {
                 <Modal.Body>
                   <Form>
                     <StyledGroup>
-                      <Form.Label>Email address</Form.Label>
+                      <Form.Label>Username</Form.Label>
                       <Form.Control
-                        type="email"
-                        placeholder="name@example.com"
-                        value={email}
-                        onChange={handleChange(setEmail)}
+                        type="text"
+                        value={username}
+                        onChange={handleChange(setUsername)}
                       />
                     </StyledGroup>
                     <StyledGroup>
@@ -295,7 +322,7 @@ function Panel(props) {
           ) : (
             <Dropdown>
               <StyledDropDown id="dropdown-basic" variant="secondary">
-                {username}
+                {user.username}
               </StyledDropDown>
 
               <Dropdown.Menu>

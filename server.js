@@ -114,9 +114,9 @@ app.post("/login", async (req, res) => {
       });
 
       // Send the token in the response
-      res.status(200).json({ data: { user, token } });
+      res.status(200).json({ token });
     } else {
-      res.status(200).json({ data: "" });
+      res.status(200).json("");
     }
   } catch {
     return res.status(500).json({ err: "Error while comparing passwords" });
