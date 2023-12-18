@@ -144,8 +144,8 @@ const ErrorMessage = styled(Form.Text)`
 `;
 
 function Panel(props) {
-  const [username, setUsername] = useState("");
   const [user, setUser] = useState({ username: "", token: "" });
+  const [username, setUsername] = useState("");
   const [isUsernameValid, setIsUsernameValid] = useState(true);
   const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(true);
@@ -222,15 +222,14 @@ function Panel(props) {
       .post(url, login)
       .then((res) => {
         console.log(res.data);
-
-        console.log(res.data.data);
-        if (res.data.token !== undefined) {
+        if (res.data.token === undefined) {
+          setErrorMessage("Username does not exist");
+        } else if (res.data.token === "") {
+          setErrorMessage("Invalid Login");
+        } else {
           const userData = { username: username, token: res.data.token };
           setUser(userData);
           handleCloseLogin();
-          console.log("valid");
-        } else {
-          setErrorMessage("Invalid Login");
         }
       })
       .catch((err) => {

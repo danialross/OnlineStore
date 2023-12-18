@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
   const user = users.find((user) => user.username === username);
 
   if (!user) {
-    return res.status(200).json({ data: "" });
+    return res.status(200).json({ token: undefined });
   }
 
   // Retrieve hashed password from database
@@ -114,9 +114,9 @@ app.post("/login", async (req, res) => {
       });
 
       // Send the token in the response
-      res.status(200).json({ token });
+      res.status(200).json({ token: token });
     } else {
-      res.status(200).json("");
+      res.status(200).json({ token: "" });
     }
   } catch {
     return res.status(500).json({ err: "Error while comparing passwords" });
