@@ -1,16 +1,18 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Dropdown from "react-bootstrap/Dropdown";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import axios from "axios";
+import {
+  Container,
+  Nav,
+  Navbar,
+  Dropdown,
+  Modal,
+  Form,
+  Button,
+} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import StyledButton from "./StyledButton";
 import Footer from "./Footer";
-import { Button } from "react-bootstrap";
-import axios from "axios";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;

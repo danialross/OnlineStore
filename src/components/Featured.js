@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import Carousel from "react-bootstrap/Carousel";
-import Image from "react-bootstrap/Image";
+import { Carousel, Image } from "react-bootstrap";
 import Loader from "./Loader";
 
 const LoaderDiv = styled.div`

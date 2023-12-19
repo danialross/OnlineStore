@@ -4,9 +4,7 @@ import axios from "axios";
 import StyledButton from "./StyledButton";
 import Loader from "./Loader";
 import { NavLink } from "react-router-dom";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import CloseButton from "react-bootstrap/CloseButton";
+import { Card, Form, CloseButton } from "react-bootstrap";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const StyledDiv = styled.div`
