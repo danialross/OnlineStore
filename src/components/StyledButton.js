@@ -33,9 +33,9 @@ const IconDiv = styled.div`
   padding: 5px;
 `;
 
-function StyledButton({ variant, onClick, icon, text }) {
+function StyledButton({ variant, onClick, icon, text, disabled }) {
   return (
-    <CustomButton variant={variant} onClick={onClick}>
+    <CustomButton variant={variant} onClick={onClick} disabled={disabled}>
       <Row>
         {/* has text and icon */}
         {text && icon && <StyledDiv>{text}</StyledDiv>}

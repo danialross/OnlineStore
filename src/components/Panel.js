@@ -139,7 +139,7 @@ const ErrorControl = styled(Form.Control)`
   border-color: red;
 `;
 
-const ErrorMessage = styled(Form.Text)`
+const ErrorText = styled(Form.Text)`
   color: red;
 `;
 
@@ -156,12 +156,11 @@ function Panel(props) {
   const [showRegister, setShowRegister] = useState(false);
 
   const clearInput = (isLoggingIn) => {
-    if (isLoggingIn === true) {
-      setUsername("");
-      setPassword("");
-    } else {
-      setUsername("");
-      setPassword("");
+    //isLoggingIn can be true for validating during logging in or false for validating during registering
+    setUsername("");
+    setPassword("");
+
+    if (!isLoggingIn) {
       setRetyped("");
     }
   };
@@ -182,11 +181,17 @@ function Panel(props) {
   };
 
   const handleCloseRegister = () => {
+    setErrorMessage("");
+    setIsUsernameValid(true);
+    setIsPasswordValid(true);
+    setIsRetypedValid(true);
     setShowRegister(false);
     clearInput(false);
   };
 
-  const isInputValid = () => {
+  const isInputValid = (isLoggingIn) => {
+    //isLoggingIn can be true for validating during logging in or false for validating during registering
+
     if (username.length === 0 || password.length === 0) {
       if (username.length === 0) {
         setIsUsernameValid(false);
@@ -199,8 +204,17 @@ function Panel(props) {
       } else {
         setIsPasswordValid(true);
       }
+
       setErrorMessage("");
       return false;
+    }
+
+    if (!isLoggingIn) {
+      if (retyped.length === 0) {
+        setIsRetypedValid(false);
+      } else {
+        setIsRetypedValid(true);
+      }
     }
 
     setIsUsernameValid(true);
@@ -209,8 +223,13 @@ function Panel(props) {
     return true;
   };
 
+  const handleChangeModal = () => {
+    handleCloseLogin();
+    handleShowRegister();
+  };
+
   const handleLogin = () => {
-    if (!isInputValid()) {
+    if (!isInputValid(true)) {
       return;
     }
 
@@ -222,10 +241,8 @@ function Panel(props) {
       .post(url, login)
       .then((res) => {
         console.log(res.data);
-        if (res.data.token === undefined) {
-          setErrorMessage("Username does not exist");
-        } else if (res.data.token === "") {
-          setErrorMessage("Invalid Login");
+        if (res.data.token === "") {
+          setErrorMessage("Invalid username or password.");
         } else {
           const userData = { username: username, token: res.data.token };
           setUser(userData);
@@ -237,14 +254,25 @@ function Panel(props) {
       });
   };
 
-  const handleChangeModal = () => {
-    handleCloseLogin();
-    handleShowRegister();
-  };
-
   const handleRegister = () => {
+    if (!isInputValid(false)) {
+      return;
+    }
+
+    if (password !== retyped) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
+    const url = "http://localhost:3000/register";
+
+    const register = { username: username, password: password };
+
+    axios.post(url, register).catch((err) => {
+      console.err({ error: err });
+    });
+
     handleCloseRegister();
-    //add logic to registering
   };
 
   const handleChange = (setter) => (e) => {
@@ -291,7 +319,7 @@ function Panel(props) {
                             value={username}
                             onChange={handleChange(setUsername)}
                           />
-                          <ErrorMessage>Username is empty</ErrorMessage>
+                          <ErrorText>Username is empty</ErrorText>
                         </>
                       )}
                     </StyledGroup>
@@ -310,7 +338,7 @@ function Panel(props) {
                             value={password}
                             onChange={handleChange(setPassword)}
                           />
-                          <ErrorMessage>Password is Empty</ErrorMessage>
+                          <ErrorText>Password is empty</ErrorText>
                         </>
                       )}
                     </StyledGroup>
@@ -321,7 +349,7 @@ function Panel(props) {
                     {errorMessage !== "" ? (
                       <>
                         <p></p>
-                        <ErrorMessage>{errorMessage}</ErrorMessage>
+                        <ErrorText>{errorMessage}</ErrorText>
                       </>
                     ) : null}
                   </Form>
@@ -345,28 +373,67 @@ function Panel(props) {
                   <Form>
                     <StyledGroup>
                       <Form.Label>Username</Form.Label>
-                      <Form.Control
-                        type="text"
-                        value={username}
-                        onChange={handleChange(setUsername)}
-                      />
+                      {isUsernameValid ? (
+                        <Form.Control
+                          type="text"
+                          value={username}
+                          onChange={handleChange(setUsername)}
+                        />
+                      ) : (
+                        <>
+                          <ErrorControl
+                            type="text"
+                            value={username}
+                            onChange={handleChange(setUsername)}
+                          />
+                          <ErrorText>Username is empty</ErrorText>
+                        </>
+                      )}
                     </StyledGroup>
                     <StyledGroup>
                       <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={handleChange(setPassword)}
-                      />
+                      {isPasswordValid ? (
+                        <Form.Control
+                          type="password"
+                          value={password}
+                          onChange={handleChange(setPassword)}
+                        />
+                      ) : (
+                        <>
+                          <ErrorControl
+                            type="password"
+                            value={password}
+                            onChange={handleChange(setPassword)}
+                          />
+                          <ErrorText>Password is empty</ErrorText>
+                        </>
+                      )}
                     </StyledGroup>
                     <StyledGroup>
                       <Form.Label>Re-type Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        value={retyped}
-                        onChange={handleChange(setRetyped)}
-                      />
+                      {isRetypedValid ? (
+                        <Form.Control
+                          type="password"
+                          value={retyped}
+                          onChange={handleChange(setRetyped)}
+                        />
+                      ) : (
+                        <>
+                          <ErrorControl
+                            type="password"
+                            value={retyped}
+                            onChange={handleChange(setRetyped)}
+                          />
+                          <ErrorText>Retyped password is empty</ErrorText>
+                        </>
+                      )}
                     </StyledGroup>
+                    {errorMessage !== "" ? (
+                      <>
+                        <p></p>
+                        <ErrorText>{errorMessage}</ErrorText>
+                      </>
+                    ) : null}
                   </Form>
                 </Modal.Body>
                 <StyledFooter>

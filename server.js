@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
   const user = users.find((user) => user.username === username);
 
   if (!user) {
-    return res.status(200).json({ token: undefined });
+    return res.status(200).json({ token: "" });
   }
 
   // Retrieve hashed password from database
