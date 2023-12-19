@@ -168,6 +168,7 @@ function Panel(props) {
   const handleShowLogin = () => {
     setShowLogin(true);
   };
+
   const handleCloseLogin = () => {
     setErrorMessage("");
     setIsUsernameValid(true);
@@ -192,6 +193,14 @@ function Panel(props) {
   const isInputValid = (isLoggingIn) => {
     //isLoggingIn can be true for validating during logging in or false for validating during registering
 
+    if (!isLoggingIn) {
+      if (retyped.length === 0) {
+        setIsRetypedValid(false);
+      } else {
+        setIsRetypedValid(true);
+      }
+    }
+
     if (username.length === 0 || password.length === 0) {
       if (username.length === 0) {
         setIsUsernameValid(false);
@@ -207,14 +216,6 @@ function Panel(props) {
 
       setErrorMessage("");
       return false;
-    }
-
-    if (!isLoggingIn) {
-      if (retyped.length === 0) {
-        setIsRetypedValid(false);
-      } else {
-        setIsRetypedValid(true);
-      }
     }
 
     setIsUsernameValid(true);
