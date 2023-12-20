@@ -145,6 +145,10 @@ const ErrorText = styled(Form.Text)`
   color: red;
 `;
 
+const SuccessText = styled(Form.Text)`
+  color: green;
+`;
+
 function Panel(props) {
   const [user, setUser] = useState({ username: "", token: "" });
   const [username, setUsername] = useState("");
@@ -156,6 +160,8 @@ function Panel(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showLoggedInMessage, setShowLoggedInMessage] = useState(false);
+  const [showRegisteredMessage, setShowRegisteredMessage] = useState(false);
 
   const clearInput = (isLoggingIn) => {
     //isLoggingIn can be true for validating during logging in or false for validating during registering
@@ -226,11 +232,6 @@ function Panel(props) {
     return true;
   };
 
-  const handleChangeModal = () => {
-    handleCloseLogin();
-    handleShowRegister();
-  };
-
   const handleLogin = () => {
     if (!isInputValid(true)) {
       return;
@@ -250,12 +251,14 @@ function Panel(props) {
           const userData = { username: username, token: res.data.token };
           setUser(userData);
           handleCloseLogin();
+          handleShowLoggedInMessage();
         }
       })
       .catch((err) => {
         console.err({ error: err });
       });
   };
+  console.log(showLoggedInMessage);
 
   const handleRegister = () => {
     if (!isInputValid(false)) {
@@ -276,10 +279,37 @@ function Panel(props) {
     });
 
     handleCloseRegister();
+    handleShowRegisteredMessage();
   };
 
   const handleChange = (setter) => (e) => {
     setter(e.target.value.trim());
+  };
+
+  // const handleEnterKey = (isLoggingIn) => {
+  //   return (event) => {
+  //     if (event.key === "Enter" && isLoggingIn) {
+  //       handleLogin();
+  //     } else if (event.key === "Enter" && !isLoggingIn) {
+  //       handleRegister();
+  //     }
+  //   };
+  // };
+
+  const handleShowLoggedInMessage = () => {
+    setShowLoggedInMessage(true);
+  };
+
+  const handleCloseLoggedInMessage = () => {
+    setShowLoggedInMessage(false);
+  };
+
+  const handleShowRegisteredMessage = () => {
+    setShowRegisteredMessage(true);
+  };
+
+  const handleCloseRegisteredMessage = () => {
+    setShowRegisteredMessage(false);
   };
 
   return (
@@ -346,7 +376,12 @@ function Panel(props) {
                       )}
                     </StyledGroup>
 
-                    <ClickableText onClick={handleChangeModal}>
+                    <ClickableText
+                      onClick={() => {
+                        handleCloseLogin();
+                        handleShowRegister();
+                      }}
+                    >
                       Register
                     </ClickableText>
                     {errorMessage !== "" ? (
@@ -359,7 +394,7 @@ function Panel(props) {
                 </Modal.Body>
                 <StyledFooter>
                   <Button variant="danger" onClick={handleCloseLogin}>
-                    Close
+                    Cancel
                   </Button>
                   <StyledButton
                     variant="secondary"
@@ -441,7 +476,7 @@ function Panel(props) {
                 </Modal.Body>
                 <StyledFooter>
                   <Button variant="danger" onClick={handleCloseRegister}>
-                    Close
+                    Cancel
                   </Button>
                   <StyledButton
                     variant="secondary"
@@ -465,6 +500,42 @@ function Panel(props) {
               </Dropdown.Menu>
             </Dropdown>
           )}
+          <Modal show={showLoggedInMessage} onHide={handleCloseLoggedInMessage}>
+            <Modal.Body>
+              <SuccessText>Login successful</SuccessText>
+            </Modal.Body>
+            <StyledFooter>
+              <p />
+              <StyledButton
+                variant="secondary"
+                onClick={handleCloseLoggedInMessage}
+                text="Close"
+              />
+            </StyledFooter>
+          </Modal>
+          <Modal
+            show={showRegisteredMessage}
+            onHide={handleCloseRegisteredMessage}
+          >
+            <Modal.Body>
+              <SuccessText>Account has be successfully created</SuccessText>
+            </Modal.Body>
+            <StyledFooter>
+              <StyledButton
+                variant="secondary"
+                onClick={handleCloseRegisteredMessage}
+                text="Close"
+              />
+              <StyledButton
+                variant="secondary"
+                onClick={() => {
+                  handleCloseRegisteredMessage();
+                  handleShowLogin();
+                }}
+                text="Go to Login"
+              />
+            </StyledFooter>
+          </Modal>
         </Container>
       </StyledNavbar>
       {props.children}
