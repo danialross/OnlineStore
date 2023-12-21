@@ -59,15 +59,19 @@ const Caption = styled(Carousel.Caption)`
   background-color: #89abe3;
   outline: 2px solid white;
   border-radius: 10px;
-  padding: 2rem;
   display: flex;
   align-items: center;
-  text-align: center;
   justify-content: center;
-  font-size: 1.5vw;
-  max-width: 100%;
   height: 5rem;
-  overflow: hidden;
+`;
+
+const StyledText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vw;
+  height: 5rem;
+  width: 100%;
 `;
 
 function Featured() {
@@ -75,21 +79,34 @@ function Featured() {
   const [featured, setFeatured] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    axios
-      .get(server)
-      .then((res) => {
-        const picked3 = [];
-        const data = res.data.items;
-        data.sort(() => Math.random() - 0.5);
-        for (let i = 0; i < 3; i++) {
-          picked3.push(data.pop());
-        }
-        setFeatured(picked3);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error("Axios error:", err);
-      });
+    // axios
+    //   .get(server)
+    //   .then((res) => {
+    //     const picked3 = [];
+    //     const data = res.data.items;
+    //     data.sort(() => Math.random() - 0.5);
+    //     for (let i = 0; i < 3; i++) {
+    //       picked3.push(data.pop());
+    //     }
+    //     setFeatured(picked3);
+    //     setIsLoading(false);
+    //   })
+    //   .catch((err) => {
+    //     console.error("Axios error:", err);
+    //   });
+    const picked3 = [
+      {
+        id: 1,
+        title: "Super really long piece of text that could fit in the text box",
+      },
+      {
+        id: 2,
+        title: "Next really long itme that also could not fit in the text box",
+      },
+      { id: 3, title: "Last really long item that mihgt fit" },
+    ];
+    setFeatured(picked3);
+    setIsLoading(false);
   }, []);
 
   return isLoading ? (
@@ -105,7 +122,9 @@ function Featured() {
             <Carousel.Item key={item.id}>
               <Frame to={"/" + item.id}>
                 <StyledImage src={item.image} fluid thumbnail />
-                <Caption>{item.title}</Caption>
+                <Caption>
+                  <StyledText>{item.title}</StyledText>
+                </Caption>
               </Frame>
             </Carousel.Item>
           );

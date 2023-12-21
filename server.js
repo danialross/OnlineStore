@@ -151,7 +151,7 @@ app.get("/cart", authenticateToken, (req, res) => {
 });
 
 //log out
-app.post("/logout", authenticateToken, (req, res) => {
+app.get("/logout", authenticateToken, (req, res) => {
   const token = req.headers.authorization.substring(7);
   blacklist.push(token);
   console.log(blacklist);

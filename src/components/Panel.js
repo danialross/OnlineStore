@@ -162,6 +162,7 @@ function Panel(props) {
   const [showRegister, setShowRegister] = useState(false);
   const [showLoggedInMessage, setShowLoggedInMessage] = useState(false);
   const [showRegisteredMessage, setShowRegisteredMessage] = useState(false);
+  const [showLoggedOutMessage, setShowLoggedOutMessage] = useState(false);
 
   const clearInput = (isLoggingIn) => {
     //isLoggingIn can be true for validating during logging in or false for validating during registering
@@ -244,7 +245,6 @@ function Panel(props) {
     axios
       .post(url, login)
       .then((res) => {
-        console.log(res.data);
         if (res.data.token === "") {
           setErrorMessage("Invalid username or password.");
         } else {
@@ -258,7 +258,6 @@ function Panel(props) {
         console.err({ error: err });
       });
   };
-  console.log(showLoggedInMessage);
 
   const handleRegister = () => {
     if (!isInputValid(false)) {
@@ -310,6 +309,27 @@ function Panel(props) {
 
   const handleCloseRegisteredMessage = () => {
     setShowRegisteredMessage(false);
+  };
+
+  const handleLogout = () => {
+    const url = "http://localhost:3000/logout";
+    axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
+    axios
+      .get(url)
+      .then(() => {
+        handleShowLoggedOutMessage();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleShowLoggedOutMessage = () => {
+    setShowLoggedOutMessage(true);
+  };
+
+  const handleCloseLoggedOutMessage = () => {
+    setShowLoggedOutMessage(false);
   };
 
   return (
@@ -496,7 +516,7 @@ function Panel(props) {
                 <StyledItem href="#/action-1">Cart</StyledItem>
                 <StyledItem href="#/action-2">Settings</StyledItem>
                 <Dropdown.Divider />
-                <StyledItem href="#/action-3">Logout</StyledItem>
+                <StyledItem onClick={handleLogout}>Logout</StyledItem>
               </Dropdown.Menu>
             </Dropdown>
           )}
@@ -533,6 +553,22 @@ function Panel(props) {
                   handleShowLogin();
                 }}
                 text="Go to Login"
+              />
+            </StyledFooter>
+          </Modal>
+          <Modal
+            show={showLoggedOutMessage}
+            onHide={handleCloseLoggedOutMessage}
+          >
+            <Modal.Body>
+              <SuccessText>Successfully Logged out</SuccessText>
+            </Modal.Body>
+            <StyledFooter>
+              <p />
+              <StyledButton
+                variant="secondary"
+                onClick={handleCloseLoggedOutMessage}
+                text="Close"
               />
             </StyledFooter>
           </Modal>
