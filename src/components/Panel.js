@@ -313,7 +313,7 @@ function Panel(props) {
 
   const handleLogout = () => {
     const url = "http://localhost:3000/logout";
-    axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
+    axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
     axios
       .get(url)
       .then(() => {

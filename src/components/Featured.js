@@ -79,34 +79,21 @@ function Featured() {
   const [featured, setFeatured] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    // axios
-    //   .get(server)
-    //   .then((res) => {
-    //     const picked3 = [];
-    //     const data = res.data.items;
-    //     data.sort(() => Math.random() - 0.5);
-    //     for (let i = 0; i < 3; i++) {
-    //       picked3.push(data.pop());
-    //     }
-    //     setFeatured(picked3);
-    //     setIsLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.error("Axios error:", err);
-    //   });
-    const picked3 = [
-      {
-        id: 1,
-        title: "Super really long piece of text that could fit in the text box",
-      },
-      {
-        id: 2,
-        title: "Next really long itme that also could not fit in the text box",
-      },
-      { id: 3, title: "Last really long item that mihgt fit" },
-    ];
-    setFeatured(picked3);
-    setIsLoading(false);
+    axios
+      .get(server)
+      .then((res) => {
+        const picked3 = [];
+        const data = res.data.items;
+        data.sort(() => Math.random() - 0.5);
+        for (let i = 0; i < 3; i++) {
+          picked3.push(data.pop());
+        }
+        setFeatured(picked3);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Axios error:", err);
+      });
   }, []);
 
   return isLoading ? (
