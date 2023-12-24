@@ -13,6 +13,8 @@ import {
 import { NavLink } from "react-router-dom";
 import StyledButton from "./StyledButton";
 import Footer from "./Footer";
+import UserInput from "./UserInput";
+import ErrorMessage from "./ErrorMessage";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
@@ -137,16 +139,14 @@ const StyledFooter = styled(Modal.Footer)`
   justify-content: space-between;
 `;
 
-const ErrorControl = styled(Form.Control)`
-  border-color: red;
-`;
-
-const ErrorText = styled(Form.Text)`
-  color: red;
-`;
-
 const SuccessText = styled(Form.Text)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
   color: green;
+  width: 100%;
+  border-radius: 10px;
 `;
 
 function Panel(props) {
@@ -359,41 +359,23 @@ function Panel(props) {
                   <Form>
                     <StyledGroup>
                       <Form.Label>Username</Form.Label>
-                      {isUsernameValid ? (
-                        <Form.Control
-                          type="text"
-                          value={username}
-                          onChange={handleChange(setUsername)}
-                        />
-                      ) : (
-                        <>
-                          <ErrorControl
-                            type="text"
-                            value={username}
-                            onChange={handleChange(setUsername)}
-                          />
-                          <ErrorText>Username is empty</ErrorText>
-                        </>
-                      )}
+                      <UserInput
+                        isInputValid={isUsernameValid}
+                        input={"Username"}
+                        type="text"
+                        value={username}
+                        onChange={handleChange(setUsername)}
+                      />
                     </StyledGroup>
                     <StyledGroup>
                       <Form.Label>Password</Form.Label>
-                      {isPasswordValid ? (
-                        <Form.Control
-                          type="password"
-                          value={password}
-                          onChange={handleChange(setPassword)}
-                        />
-                      ) : (
-                        <>
-                          <ErrorControl
-                            type="password"
-                            value={password}
-                            onChange={handleChange(setPassword)}
-                          />
-                          <ErrorText>Password is empty</ErrorText>
-                        </>
-                      )}
+                      <UserInput
+                        isInputValid={isPasswordValid}
+                        input={"Password"}
+                        type="password"
+                        value={password}
+                        onChange={handleChange(setPassword)}
+                      />
                     </StyledGroup>
 
                     <ClickableText
@@ -404,12 +386,8 @@ function Panel(props) {
                     >
                       Register
                     </ClickableText>
-                    {errorMessage !== "" ? (
-                      <>
-                        <p></p>
-                        <ErrorText>{errorMessage}</ErrorText>
-                      </>
-                    ) : null}
+
+                    <ErrorMessage message={errorMessage} />
                   </Form>
                 </Modal.Body>
                 <StyledFooter>
@@ -431,67 +409,35 @@ function Panel(props) {
                   <Form>
                     <StyledGroup>
                       <Form.Label>Username</Form.Label>
-                      {isUsernameValid ? (
-                        <Form.Control
-                          type="text"
-                          value={username}
-                          onChange={handleChange(setUsername)}
-                        />
-                      ) : (
-                        <>
-                          <ErrorControl
-                            type="text"
-                            value={username}
-                            onChange={handleChange(setUsername)}
-                          />
-                          <ErrorText>Username is empty</ErrorText>
-                        </>
-                      )}
+                      <UserInput
+                        isInputValid={isUsernameValid}
+                        input={"Username"}
+                        type="text"
+                        value={username}
+                        onChange={handleChange(setUsername)}
+                      />
                     </StyledGroup>
                     <StyledGroup>
                       <Form.Label>Password</Form.Label>
-                      {isPasswordValid ? (
-                        <Form.Control
-                          type="password"
-                          value={password}
-                          onChange={handleChange(setPassword)}
-                        />
-                      ) : (
-                        <>
-                          <ErrorControl
-                            type="password"
-                            value={password}
-                            onChange={handleChange(setPassword)}
-                          />
-                          <ErrorText>Password is empty</ErrorText>
-                        </>
-                      )}
+                      <UserInput
+                        isInputValid={isPasswordValid}
+                        input={"Password"}
+                        type="password"
+                        value={password}
+                        onChange={handleChange(setPassword)}
+                      />
                     </StyledGroup>
                     <StyledGroup>
                       <Form.Label>Re-type Password</Form.Label>
-                      {isRetypedValid ? (
-                        <Form.Control
-                          type="password"
-                          value={retyped}
-                          onChange={handleChange(setRetyped)}
-                        />
-                      ) : (
-                        <>
-                          <ErrorControl
-                            type="password"
-                            value={retyped}
-                            onChange={handleChange(setRetyped)}
-                          />
-                          <ErrorText>Retyped password is empty</ErrorText>
-                        </>
-                      )}
+                      <UserInput
+                        isInputValid={isRetypedValid}
+                        input={"Retyped Password"}
+                        type="password"
+                        value={retyped}
+                        onChange={handleChange(setRetyped)}
+                      />
                     </StyledGroup>
-                    {errorMessage !== "" ? (
-                      <>
-                        <p></p>
-                        <ErrorText>{errorMessage}</ErrorText>
-                      </>
-                    ) : null}
+                    <ErrorMessage message={errorMessage} />
                   </Form>
                 </Modal.Body>
                 <StyledFooter>
@@ -538,7 +484,7 @@ function Panel(props) {
             onHide={handleCloseRegisteredMessage}
           >
             <Modal.Body>
-              <SuccessText>Account has be successfully created</SuccessText>
+              <SuccessText>Account Created Successfully</SuccessText>
             </Modal.Body>
             <StyledFooter>
               <StyledButton
@@ -561,7 +507,7 @@ function Panel(props) {
             onHide={handleCloseLoggedOutMessage}
           >
             <Modal.Body>
-              <SuccessText>Successfully Logged out</SuccessText>
+              <SuccessText>Log Out Successful</SuccessText>
             </Modal.Body>
             <StyledFooter>
               <p />
