@@ -168,6 +168,7 @@ urls.set("/register", "http://localhost:3000/register");
 urls.set("/checkout", "http://localhost:3000/checkout");
 urls.set("/cart", "http://localhost:3000/cart");
 urls.set("/items", "http://localhost:3000/items/");
+urls.set("/logout", "http://localhost:3000/logout");
 
 function Panel(props) {
   const [user, setUser] = useState({ username: "", token: "" });
@@ -326,10 +327,12 @@ function Panel(props) {
 
   const handleLogout = () => {
     const url = urls.get("/logout");
+    console.log("url " + url);
     axios
       .get(url)
       .then(() => {
         handleShowLoggedOutMessage();
+        setUser({ username: "", token: "" });
       })
       .catch((err) => {
         console.error(err);
@@ -362,12 +365,10 @@ function Panel(props) {
         for (const item of res.data) {
           const url = urls.get("/items");
           const itemInCart = { item: {}, quantity: item.quantity };
-          console.log(res.data);
 
           axios
             .get(url + item.id)
             .then((res) => {
-              console.log("item " + res.data.item);
               itemInCart.item = res.data.item;
               console.log(itemInCart);
               cartWithDetails.push(itemInCart);
@@ -376,7 +377,6 @@ function Panel(props) {
               console.error(err);
             });
         }
-        console.log(cartWithDetails);
         setCart(cartWithDetails);
       })
       .catch((err) => {
@@ -527,7 +527,7 @@ function Panel(props) {
           )}
           <Modal show={showLoggedInMessage} onHide={handleCloseLoggedInMessage}>
             <Modal.Body>
-              <SuccessText>Login successful</SuccessText>
+              <SuccessText>Login Successful</SuccessText>
             </Modal.Body>
             <StyledFooter>
               <p />
@@ -584,6 +584,7 @@ function Panel(props) {
               {cart.map((object) => {
                 return (
                   <CartItem
+                    key={object.item.id}
                     image={object.item.image}
                     title={object.item.title}
                     price={object.item.price}
