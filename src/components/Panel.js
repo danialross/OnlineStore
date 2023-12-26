@@ -15,6 +15,7 @@ import StyledButton from "./StyledButton";
 import Footer from "./Footer";
 import UserInput from "./UserInput";
 import ErrorMessage from "./ErrorMessage";
+import CartItem from "./CartItem";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
@@ -143,11 +144,30 @@ const SuccessText = styled(Form.Text)`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
   color: green;
   width: 100%;
   border-radius: 10px;
 `;
+
+const Title = styled.div`
+  border-radius: 5px;
+  outline: 2px solid #89abe3;
+  color: #89abe3;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+`;
+
+const urls = new Map();
+urls.set("/login", "http://localhost:3000/login");
+urls.set("/register", "http://localhost:3000/register");
+urls.set("/checkout", "http://localhost:3000/checkout");
+urls.set("/cart", "http://localhost:3000/cart");
+urls.set("/items", "http://localhost:3000/items/");
 
 function Panel(props) {
   const [user, setUser] = useState({ username: "", token: "" });
@@ -163,6 +183,8 @@ function Panel(props) {
   const [showLoggedInMessage, setShowLoggedInMessage] = useState(false);
   const [showRegisteredMessage, setShowRegisteredMessage] = useState(false);
   const [showLoggedOutMessage, setShowLoggedOutMessage] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [cart, setCart] = useState([]);
 
   const clearInput = (isLoggingIn) => {
     //isLoggingIn can be true for validating during logging in or false for validating during registering
@@ -238,7 +260,7 @@ function Panel(props) {
       return;
     }
 
-    const url = "http://localhost:3000/login";
+    const url = urls.get("/login");
 
     const login = { username: username, password: password };
 
@@ -249,16 +271,17 @@ function Panel(props) {
           setErrorMessage("Invalid username or password.");
         } else {
           const userData = { username: username, token: res.data.token };
+          //remove object and replace as string
           setUser(userData);
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer " + res.data.token;
+          handleUpdateCart();
           handleCloseLogin();
           handleShowLoggedInMessage();
         }
       })
-      .catch((err) => {
-        console.err({ error: err });
-      });
+      .catch((err) => {});
   };
-
   const handleRegister = () => {
     if (!isInputValid(false)) {
       return;
@@ -269,12 +292,12 @@ function Panel(props) {
       return;
     }
 
-    const url = "http://localhost:3000/register";
+    const url = urls.get("/register");
 
     const register = { username: username, password: password };
 
     axios.post(url, register).catch((err) => {
-      console.err({ error: err });
+      console.error({ error: err });
     });
 
     handleCloseRegister();
@@ -284,16 +307,6 @@ function Panel(props) {
   const handleChange = (setter) => (e) => {
     setter(e.target.value.trim());
   };
-
-  // const handleEnterKey = (isLoggingIn) => {
-  //   return (event) => {
-  //     if (event.key === "Enter" && isLoggingIn) {
-  //       handleLogin();
-  //     } else if (event.key === "Enter" && !isLoggingIn) {
-  //       handleRegister();
-  //     }
-  //   };
-  // };
 
   const handleShowLoggedInMessage = () => {
     setShowLoggedInMessage(true);
@@ -312,8 +325,7 @@ function Panel(props) {
   };
 
   const handleLogout = () => {
-    const url = "http://localhost:3000/logout";
-    axios.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+    const url = urls.get("/logout");
     axios
       .get(url)
       .then(() => {
@@ -330,6 +342,53 @@ function Panel(props) {
 
   const handleCloseLoggedOutMessage = () => {
     setShowLoggedOutMessage(false);
+  };
+
+  const handleShowCart = () => {
+    setShowCart(true);
+  };
+
+  const handleCloseCart = () => {
+    setShowCart(false);
+  };
+
+  const handleUpdateCart = () => {
+    const url = urls.get("/cart");
+    const cartWithDetails = [];
+
+    axios
+      .get(url)
+      .then((res) => {
+        for (const item of res.data) {
+          const url = urls.get("/items");
+          const itemInCart = { item: {}, quantity: item.quantity };
+          console.log(res.data);
+
+          axios
+            .get(url + item.id)
+            .then((res) => {
+              console.log("item " + res.data.item);
+              itemInCart.item = res.data.item;
+              console.log(itemInCart);
+              cartWithDetails.push(itemInCart);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+        console.log(cartWithDetails);
+        setCart(cartWithDetails);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleCheckout = () => {
+    const url = urls.get("/checkout");
+    axios.put(url).catch((err) => {
+      console.error(err);
+    });
   };
 
   return (
@@ -459,7 +518,7 @@ function Panel(props) {
               </StyledDropDown>
 
               <Dropdown.Menu>
-                <StyledItem href="#/action-1">Cart</StyledItem>
+                <StyledItem onClick={handleShowCart}>Cart</StyledItem>
                 <StyledItem href="#/action-2">Settings</StyledItem>
                 <Dropdown.Divider />
                 <StyledItem onClick={handleLogout}>Logout</StyledItem>
@@ -515,6 +574,34 @@ function Panel(props) {
                 variant="secondary"
                 onClick={handleCloseLoggedOutMessage}
                 text="Close"
+              />
+            </StyledFooter>
+          </Modal>
+
+          <Modal show={showCart} onHide={handleCloseCart}>
+            <Modal.Body>
+              <Title>Cart</Title>
+              {cart.map((object) => {
+                return (
+                  <CartItem
+                    image={object.item.image}
+                    title={object.item.title}
+                    price={object.item.price}
+                    quantity={object.quantity}
+                  />
+                );
+              })}
+            </Modal.Body>
+            <StyledFooter>
+              <StyledButton
+                variant="secondary"
+                onClick={handleCloseCart}
+                text="Close"
+              />
+              <StyledButton
+                variant="secondary"
+                onClick={handleCheckout}
+                text="Checkout"
               />
             </StyledFooter>
           </Modal>
