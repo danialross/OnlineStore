@@ -1,9 +1,9 @@
 import Panel from "./components/Panel";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import CategoryPage from "./pages/CategoryPage";
 
 function App() {
-  const mockUsername = "kevin";
   return (
     <BrowserRouter>
       <Routes>
@@ -11,16 +11,24 @@ function App() {
           path="/"
           exact
           element={
-            <Panel username={mockUsername}>
+            <Panel>
               <HomePage />
             </Panel>
           }
         />
         <Route
-          path="/sale"
+          path="/for-him"
           element={
-            <Panel username={mockUsername}>
-              <h1>empty</h1>
+            <Panel>
+              <CategoryPage key={"him"} filterBy={"him"} />
+            </Panel>
+          }
+        />
+        <Route
+          path="/for-her"
+          element={
+            <Panel>
+              <CategoryPage key={"her"} filterBy={"her"} />
             </Panel>
           }
         />

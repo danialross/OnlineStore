@@ -5,7 +5,7 @@ import StyledButton from "./StyledButton";
 import Loader from "./Loader";
 import { NavLink } from "react-router-dom";
 import { Card, Form, CloseButton } from "react-bootstrap";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faUndo } from "@fortawesome/free-solid-svg-icons";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -75,7 +75,7 @@ const SearchBar = styled(Form.Control)`
   }
 `;
 
-const Close = styled(CloseButton)`
+const Clear = styled(CloseButton)`
   margin-left: -2rem;
 `;
 
@@ -110,6 +110,10 @@ const StyledImage = styled(Card.Img)`
   padding: 2rem;
 `;
 
+const Spacer = styled.div`
+  margin-right: 1rem;
+`;
+
 const Body = styled(Card.Body)`
   display: flex;
   flex-direction: column;
@@ -140,6 +144,17 @@ function Catalog() {
   const handleClear = (e) => {
     if (query !== "") {
       setQuery("");
+    }
+  };
+
+  const handleReset = () => {
+    if (query !== "") {
+      setQuery("");
+      const newFiltered = items.filter((item) =>
+        item.title.toLowerCase().includes("")
+      );
+      setLastQuery("");
+      setFiltered(newFiltered);
     }
   };
 
@@ -186,12 +201,18 @@ function Catalog() {
                   onChange={handleChange}
                   value={query}
                 />
-                <Close onClick={handleClear} />
+                <Clear onClick={handleClear} />
               </StyledForm>
               <StyledButton
                 variant="secondary"
                 onClick={handleSearch}
                 icon={faSearch}
+              />
+              <Spacer />
+              <StyledButton
+                variant="secondary"
+                onClick={handleReset}
+                icon={faUndo}
               />
             </SearchDiv>
           </Row>
