@@ -197,7 +197,7 @@ function Catalog() {
             <SearchDiv>
               <StyledForm onSubmit={handleSubmit}>
                 <SearchBar
-                  placeholder="Search For Item"
+                  placeholder="Search"
                   onChange={handleChange}
                   value={query}
                 />
@@ -223,14 +223,14 @@ function Catalog() {
               {filtered.map((item) => {
                 return (
                   <CustomCard key={item.id}>
-                    <StyledNavLink to={"/" + item.id}>
+                    <StyledNavLink to={"/items/" + item.id}>
                       <StyledImage variant="top" src={item.image} />
                       <Body>
                         <Title>{item.title}</Title>
                         <Text>${item.price.toFixed(2)}</Text>
                       </Body>
                     </StyledNavLink>
-                    <StyledButton variant="secondary" text="Add to cart" />
+                    <StyledButton variant="secondary" text="ADD TO CART" />
                   </CustomCard>
                 );
               })}

@@ -107,7 +107,7 @@ function Featured() {
         {featured.map((item) => {
           return (
             <Carousel.Item key={item.id}>
-              <Frame to={"/" + item.id}>
+              <Frame to={"/items/" + item.id}>
                 <StyledImage src={item.image} fluid thumbnail />
                 <Caption>
                   <StyledText>{item.title}</StyledText>

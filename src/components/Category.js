@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Loader from "./Loader";
@@ -65,7 +66,9 @@ const Card = styled.div`
   text-align: center;
   padding: 1rem;
 `;
-
+const StyledLink = styled(NavLink)`
+  text-decoration: none;
+`;
 const ColoredText = styled.p`
   color: #89abe3;
 `;
@@ -88,7 +91,6 @@ function Category({ filterBy }) {
     axios
       .get(url)
       .then((res) => {
-        console.log("triggered");
         setItems(res.data);
         setIsLoading(false);
       })
@@ -114,11 +116,12 @@ function Category({ filterBy }) {
           {items.map((item) => {
             return (
               <Card key={item.id}>
-                <Image src={item.image} />
-                <ColoredText>{item.title}</ColoredText>
-
-                <ColoredText>${item.price.toFixed(2)}</ColoredText>
-                <StyledButton variant={"secondary"} text={"Add to cart"} />
+                <StyledLink to={"/items/" + item.id}>
+                  <Image src={item.image} />
+                  <ColoredText>{item.title}</ColoredText>
+                  <ColoredText>${item.price.toFixed(2)}</ColoredText>
+                </StyledLink>
+                <StyledButton variant={"secondary"} text={"ADD TO CART"} />
               </Card>
             );
           })}
