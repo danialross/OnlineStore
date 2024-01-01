@@ -5,7 +5,12 @@ import StyledButton from "./StyledButton";
 import Loader from "./Loader";
 import { NavLink } from "react-router-dom";
 import { Card, Form, CloseButton } from "react-bootstrap";
-import { faSearch, faUndo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSearch,
+  faUndo,
+  faCircleQuestion,
+} from "@fortawesome/free-solid-svg-icons";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -129,6 +134,24 @@ const Text = styled(Card.Text)`
   color: #89abe3;
 `;
 
+const NoResultCard = styled(Card)`
+  width: 20rem;
+  height: 15rem;
+  padding: 2rem;
+`;
+
+const NoResultBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  text-align: center;
+`;
+
+const StyledIcon = styled(FontAwesomeIcon)`
+  color: #89abe3;
+`;
+
 function Catalog() {
   const server = "http://localhost:3000/items";
   const [query, setQuery] = useState("");
@@ -220,20 +243,30 @@ function Catalog() {
             <Loader />
           ) : (
             <ItemsDiv>
-              {filtered.map((item) => {
-                return (
-                  <CustomCard key={item.id}>
-                    <StyledNavLink to={"/items/" + item.id}>
-                      <StyledImage variant="top" src={item.image} />
-                      <Body>
-                        <Title>{item.title}</Title>
-                        <Text>${item.price.toFixed(2)}</Text>
-                      </Body>
-                    </StyledNavLink>
-                    <StyledButton variant="secondary" text="ADD TO CART" />
-                  </CustomCard>
-                );
-              })}
+              {filtered.length !== 0 ? (
+                filtered.map((item) => {
+                  return (
+                    <CustomCard key={item.id}>
+                      <StyledNavLink to={"/items/" + item.id}>
+                        <StyledImage variant="top" src={item.image} />
+                        <Body>
+                          <Title>{item.title}</Title>
+                          <Text>${item.price.toFixed(2)}</Text>
+                        </Body>
+                      </StyledNavLink>
+                      <StyledButton variant="secondary" text="ADD TO CART" />
+                    </CustomCard>
+                  );
+                })
+              ) : (
+                <NoResultCard key={0}>
+                  <NoResultBody>
+                    <Title>No Items Found</Title>
+                    <StyledIcon icon={faCircleQuestion} size="5x" />
+                    <Text>No Matches with "{query}"</Text>
+                  </NoResultBody>
+                </NoResultCard>
+              )}
             </ItemsDiv>
           )}
         </Col>
