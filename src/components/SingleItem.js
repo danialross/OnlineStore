@@ -13,7 +13,7 @@ const CenterDiv = styled.div`
 `;
 
 const Header = styled.div`
-  width: 80%;
+  width: 60%;
   background-color: #89abe3;
   outline: 2px solid white;
   border-radius: 5px;
@@ -23,6 +23,7 @@ const Header = styled.div`
   color: white;
   overflow: hidden;
   font-size: 2rem;
+  text-align: center;
 `;
 
 const Background = styled.div`

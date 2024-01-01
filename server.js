@@ -212,6 +212,46 @@ app.put("/checkout", authenticateToken, async (req, res) => {
   res.status(200).json("user has checked out, cart is now empty");
 });
 
+//verify password for resetting purpose
+app.post("/verify", authenticateToken, async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const currUser = users.find((user) => {
+    return user.username === username;
+  });
+
+  try {
+    const result = await bcrypt.compare(password, currUser.password);
+    if (result) {
+      res.status(200).json({ result: "verified" });
+    } else {
+      res.status(200).json({ result: "unverified" });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+//update password
+app.put("/changePassword", authenticateToken, async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const currUser = users.find((user) => {
+    return user.username === username;
+  });
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    currUser.password = hashedPassword;
+    res.status(200).json({ message: username + " has changed passwords" });
+  } catch {
+    console.error("Error while changing password");
+    res.status(500);
+  }
+});
+
 //sign up
 app.post("/register", async (req, res) => {
   const username = req.body.username;

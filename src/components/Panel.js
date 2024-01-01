@@ -186,6 +186,8 @@ function Panel(props) {
   const [showLoggedOutMessage, setShowLoggedOutMessage] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [cart, setCart] = useState([]);
+  const [showResetPass, setShowResetPass] = useState(false);
+  const [showVerification, setShowVerification] = useState(false);
 
   const clearInput = (isLoggingIn) => {
     //isLoggingIn can be true for validating during logging in or false for validating during registering
@@ -370,7 +372,6 @@ function Panel(props) {
             .get(url + item.id)
             .then((res) => {
               itemInCart.item = res.data.item;
-              console.log(itemInCart);
               cartWithDetails.push(itemInCart);
             })
             .catch((err) => {
@@ -391,6 +392,84 @@ function Panel(props) {
     });
   };
 
+  const handleShowResetPass = () => {
+    setShowResetPass(true);
+  };
+
+  const handleCloseResetPass = () => {
+    setShowResetPass(false);
+    setPassword("");
+    setRetyped("");
+    setErrorMessage("");
+  };
+
+  const handleShowVerification = () => {
+    setShowVerification(true);
+    setIsPasswordValid(true);
+  };
+
+  const handleCloseVerification = () => {
+    setShowVerification(false);
+    setPassword("");
+    setErrorMessage("");
+  };
+
+  const handleVerify = () => {
+    if (password.length === 0) {
+      setIsPasswordValid(false);
+      return;
+    } else {
+      setIsPasswordValid(true);
+    }
+
+    const url = "http://localhost:3000/verify";
+    const body = { username: user.username, password: password };
+    console.log(body);
+    axios
+      .post(url, body)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.result === "verified") {
+          handleShowResetPass();
+          handleCloseVerification();
+          setErrorMessage("");
+        } else {
+          setErrorMessage("Incorrect Password");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleResetPassword = () => {
+    const url = "http://localhost:3000/changePassword";
+    if (password.length === 0 && retyped.length === 0) {
+      setErrorMessage("Both Passwords Are Empty");
+      return;
+    } else if (password.length === 0) {
+      setErrorMessage("Password Is Empty");
+      return;
+    } else if (retyped.length === 0) {
+      setErrorMessage("Retyped Passwrod Is Empty");
+      return;
+    } else if (retyped !== password) {
+      setErrorMessage("Passwords Do Not Match");
+      return;
+    }
+
+    const body = { username: user.username, password: password };
+
+    axios
+      .put(url, body)
+      .then(() => {
+        handleCloseResetPass();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <>
       <StyledNavbar fixed="top">
@@ -409,107 +488,6 @@ function Panel(props) {
                 text="Login"
                 onClick={handleShowLogin}
               ></StyledButton>
-
-              <Modal show={showLogin} onHide={handleCloseLogin}>
-                <Modal.Header>
-                  <Modal.Title>Login</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form>
-                    <StyledGroup>
-                      <Form.Label>Username</Form.Label>
-                      <UserInput
-                        isInputValid={isUsernameValid}
-                        input={"Username"}
-                        type="text"
-                        value={username}
-                        onChange={handleChange(setUsername)}
-                      />
-                    </StyledGroup>
-                    <StyledGroup>
-                      <Form.Label>Password</Form.Label>
-                      <UserInput
-                        isInputValid={isPasswordValid}
-                        input={"Password"}
-                        type="password"
-                        value={password}
-                        onChange={handleChange(setPassword)}
-                      />
-                    </StyledGroup>
-
-                    <ClickableText
-                      onClick={() => {
-                        handleCloseLogin();
-                        handleShowRegister();
-                      }}
-                    >
-                      Register
-                    </ClickableText>
-
-                    <ErrorMessage message={errorMessage} />
-                  </Form>
-                </Modal.Body>
-                <StyledFooter>
-                  <Button variant="danger" onClick={handleCloseLogin}>
-                    Cancel
-                  </Button>
-                  <StyledButton
-                    variant="secondary"
-                    text="Login"
-                    onClick={handleLogin}
-                  />
-                </StyledFooter>
-              </Modal>
-              <Modal show={showRegister} onHide={handleCloseRegister}>
-                <Modal.Header>
-                  <Modal.Title>Register</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form>
-                    <StyledGroup>
-                      <Form.Label>Username</Form.Label>
-                      <UserInput
-                        isInputValid={isUsernameValid}
-                        input={"Username"}
-                        type="text"
-                        value={username}
-                        onChange={handleChange(setUsername)}
-                      />
-                    </StyledGroup>
-                    <StyledGroup>
-                      <Form.Label>Password</Form.Label>
-                      <UserInput
-                        isInputValid={isPasswordValid}
-                        input={"Password"}
-                        type="password"
-                        value={password}
-                        onChange={handleChange(setPassword)}
-                      />
-                    </StyledGroup>
-                    <StyledGroup>
-                      <Form.Label>Re-type Password</Form.Label>
-                      <UserInput
-                        isInputValid={isRetypedValid}
-                        input={"Retyped Password"}
-                        type="password"
-                        value={retyped}
-                        onChange={handleChange(setRetyped)}
-                      />
-                    </StyledGroup>
-                    <ErrorMessage message={errorMessage} />
-                  </Form>
-                </Modal.Body>
-                <StyledFooter>
-                  <Button variant="danger" onClick={handleCloseRegister}>
-                    Cancel
-                  </Button>
-                  <StyledButton
-                    variant="secondary"
-                    text="Register"
-                    onClick={handleRegister}
-                  />
-                </StyledFooter>
-              </Modal>
             </>
           ) : (
             <Dropdown>
@@ -519,12 +497,121 @@ function Panel(props) {
 
               <Dropdown.Menu>
                 <StyledItem onClick={handleShowCart}>Cart</StyledItem>
-                <StyledItem href="#/action-2">Settings</StyledItem>
+                <StyledItem onClick={handleShowVerification}>
+                  Change Password
+                </StyledItem>
                 <Dropdown.Divider />
                 <StyledItem onClick={handleLogout}>Logout</StyledItem>
               </Dropdown.Menu>
             </Dropdown>
           )}
+          <Modal show={showLogin} onHide={handleCloseLogin}>
+            <Modal.Header>
+              <Modal.Title>Login</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <StyledGroup>
+                  <Form.Label>Username</Form.Label>
+                  <UserInput
+                    isInputValid={isUsernameValid}
+                    input={"Username"}
+                    type="text"
+                    value={username}
+                    onChange={handleChange(setUsername)}
+                  />
+                </StyledGroup>
+                <StyledGroup>
+                  <Form.Label>Password</Form.Label>
+                  <UserInput
+                    isInputValid={isPasswordValid}
+                    input={"Password"}
+                    type="password"
+                    value={password}
+                    onChange={handleChange(setPassword)}
+                  />
+                </StyledGroup>
+
+                <ClickableText
+                  onClick={() => {
+                    handleCloseLogin();
+                    handleShowRegister();
+                  }}
+                >
+                  Register
+                </ClickableText>
+                <ErrorMessage message={errorMessage} />
+              </Form>
+            </Modal.Body>
+            <StyledFooter>
+              <Button variant="danger" onClick={handleCloseLogin}>
+                Cancel
+              </Button>
+              <StyledButton
+                variant="secondary"
+                text="Login"
+                onClick={handleLogin}
+              />
+            </StyledFooter>
+          </Modal>
+          <Modal show={showRegister} onHide={handleCloseRegister}>
+            <Modal.Header>
+              <Modal.Title>Register</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <StyledGroup>
+                  <Form.Label>Username</Form.Label>
+                  <UserInput
+                    isInputValid={isUsernameValid}
+                    input={"Username"}
+                    type="text"
+                    value={username}
+                    onChange={handleChange(setUsername)}
+                  />
+                </StyledGroup>
+                <StyledGroup>
+                  <Form.Label>Password</Form.Label>
+                  <UserInput
+                    isInputValid={isPasswordValid}
+                    input={"Password"}
+                    type="password"
+                    value={password}
+                    onChange={handleChange(setPassword)}
+                  />
+                </StyledGroup>
+                <StyledGroup>
+                  <Form.Label>Re-type Password</Form.Label>
+                  <UserInput
+                    isInputValid={isRetypedValid}
+                    input={"Retyped Password"}
+                    type="password"
+                    value={retyped}
+                    onChange={handleChange(setRetyped)}
+                  />
+                </StyledGroup>
+                <ErrorMessage message={errorMessage} />
+              </Form>
+            </Modal.Body>
+            <StyledFooter>
+              <Button variant="danger" onClick={handleCloseRegister}>
+                Cancel
+              </Button>
+              <StyledButton
+                variant="secondary"
+                text="Register"
+                onClick={handleRegister}
+              />
+            </StyledFooter>
+          </Modal>
           <Modal show={showLoggedInMessage} onHide={handleCloseLoggedInMessage}>
             <Modal.Body>
               <SuccessText>Login Successful</SuccessText>
@@ -577,7 +664,6 @@ function Panel(props) {
               />
             </StyledFooter>
           </Modal>
-
           <Modal show={showCart} onHide={handleCloseCart}>
             <Modal.Body>
               <Title>Cart</Title>
@@ -603,6 +689,84 @@ function Panel(props) {
                 variant="secondary"
                 onClick={handleCheckout}
                 text="Checkout"
+              />
+            </StyledFooter>
+          </Modal>
+          <Modal show={showVerification} onHide={handleCloseVerification}>
+            <Modal.Header>Enter Current Password</Modal.Header>
+            <Modal.Body>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <StyledGroup>
+                  <Form.Label>Password</Form.Label>
+                  <UserInput
+                    isInputValid={isPasswordValid}
+                    input={"Password"}
+                    type="password"
+                    value={password}
+                    onChange={handleChange(setPassword)}
+                  />
+                  <ErrorMessage message={errorMessage} />
+                </StyledGroup>
+              </Form>
+            </Modal.Body>
+            <StyledFooter>
+              <StyledButton
+                variant="secondary"
+                text="Close"
+                onClick={handleCloseVerification}
+              />
+              <StyledButton
+                variant="secondary"
+                text="Confirm"
+                onClick={handleVerify}
+              />
+            </StyledFooter>
+          </Modal>
+          <Modal show={showResetPass} onHide={handleCloseResetPass}>
+            <Modal.Header>Enter New Password</Modal.Header>
+            <Modal.Body>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <StyledGroup>
+                  <Form.Label>Password</Form.Label>
+                  <UserInput
+                    isInputValid={isPasswordValid}
+                    input={"Password"}
+                    type="password"
+                    value={password}
+                    onChange={handleChange(setPassword)}
+                  />
+                </StyledGroup>
+                <StyledGroup>
+                  <Form.Label>Re-type Password</Form.Label>
+                  <UserInput
+                    isInputValid={isRetypedValid}
+                    input={"Retyped Password"}
+                    type="password"
+                    value={retyped}
+                    onChange={handleChange(setRetyped)}
+                  />
+                  <ErrorMessage message={errorMessage} />
+                </StyledGroup>
+              </Form>
+            </Modal.Body>
+            <StyledFooter>
+              <StyledButton
+                variant="secondary"
+                text={"Close"}
+                onClick={handleCloseResetPass}
+              />
+              <StyledButton
+                variant="secondary"
+                text={"Confirm"}
+                onClick={handleResetPassword}
               />
             </StyledFooter>
           </Modal>
