@@ -444,18 +444,25 @@ function Panel(props) {
 
   const handleResetPassword = () => {
     const url = "http://localhost:3000/changePassword";
-    if (password.length === 0 && retyped.length === 0) {
-      setErrorMessage("Both Passwords Are Empty");
+
+    if (password.length === 0) {
+      setIsPasswordValid(false);
+    } else {
+      setIsPasswordValid(true);
+    }
+
+    if (retyped.length === 0) {
+      setIsRetypedValid(false);
       return;
-    } else if (password.length === 0) {
-      setErrorMessage("Password Is Empty");
-      return;
-    } else if (retyped.length === 0) {
-      setErrorMessage("Retyped Passwrod Is Empty");
-      return;
-    } else if (retyped !== password) {
+    } else {
+      setIsRetypedValid(true);
+    }
+
+    if (retyped !== password) {
       setErrorMessage("Passwords Do Not Match");
       return;
+    } else {
+      setErrorMessage("");
     }
 
     const body = { username: user.username, password: password };
