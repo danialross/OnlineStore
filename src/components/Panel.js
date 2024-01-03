@@ -272,6 +272,7 @@ function Panel(props) {
       .then((res) => {
         if (res.data.token === "") {
           setErrorMessage("Invalid username or password.");
+          setPassword("");
         } else {
           const userData = { username: username, token: res.data.token };
           //remove object and replace as string

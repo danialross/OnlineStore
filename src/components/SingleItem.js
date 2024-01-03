@@ -82,7 +82,7 @@ function SingleItem() {
       <Background>
         <Picture src={item.image} alt={item.title} thumbnail />
         <Text>
-          <BottomGap>${item.price}</BottomGap>
+          <BottomGap>${item.price.toFixed(2)}</BottomGap>
           <BottomGap>{item.description}</BottomGap>
           <StyledButton text={"ADD TO CART"} />
         </Text>
