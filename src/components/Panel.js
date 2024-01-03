@@ -16,6 +16,7 @@ import Footer from "./Footer";
 import UserInput from "./UserInput";
 import ErrorMessage from "./ErrorMessage";
 import CartItem from "./CartItem";
+import ModalWithMessage from "./ModalWithMessage";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
@@ -140,17 +141,6 @@ const StyledFooter = styled(Modal.Footer)`
   justify-content: space-between;
 `;
 
-const SuccessText = styled(Form.Text)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  padding: 0.5rem;
-  color: green;
-  width: 100%;
-  border-radius: 10px;
-`;
-
 const Title = styled.div`
   border-radius: 5px;
   outline: 2px solid #89abe3;
@@ -169,6 +159,8 @@ urls.set("/checkout", "http://localhost:3000/checkout");
 urls.set("/cart", "http://localhost:3000/cart");
 urls.set("/items", "http://localhost:3000/items/");
 urls.set("/logout", "http://localhost:3000/logout");
+urls.set("/verify", "http://localhost:3000/verify");
+urls.set("/change-password", "http://localhost:3000/change-password");
 
 function Panel(props) {
   const [user, setUser] = useState({ username: "", token: "" });
@@ -184,9 +176,11 @@ function Panel(props) {
   const [showLoggedInMessage, setShowLoggedInMessage] = useState(false);
   const [showRegisteredMessage, setShowRegisteredMessage] = useState(false);
   const [showLoggedOutMessage, setShowLoggedOutMessage] = useState(false);
+  const [showCheckoutMessage, setShowCheckoutMessage] = useState(false);
+  const [showResetMessage, setShowResetMessage] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [cart, setCart] = useState([]);
-  const [showResetPass, setShowResetPass] = useState(false);
+  const [showReset, setShowReset] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
 
   const clearInput = (isLoggingIn) => {
@@ -199,8 +193,12 @@ function Panel(props) {
     }
   };
 
-  const handleShowLogin = () => {
-    setShowLogin(true);
+  const handleShow = (setter) => {
+    setter(true);
+  };
+
+  const handleClose = (setter) => {
+    setter(false);
   };
 
   const handleCloseLogin = () => {
@@ -209,10 +207,6 @@ function Panel(props) {
     setIsPasswordValid(true);
     setShowLogin(false);
     clearInput(true);
-  };
-
-  const handleShowRegister = () => {
-    setShowRegister(true);
   };
 
   const handleCloseRegister = () => {
@@ -281,11 +275,12 @@ function Panel(props) {
             "Bearer " + res.data.token;
           handleUpdateCart();
           handleCloseLogin();
-          handleShowLoggedInMessage();
+          handleShow(setShowLoggedInMessage);
         }
       })
       .catch((err) => {});
   };
+
   const handleRegister = () => {
     if (!isInputValid(false)) {
       return;
@@ -305,27 +300,11 @@ function Panel(props) {
     });
 
     handleCloseRegister();
-    handleShowRegisteredMessage();
+    handleShow(setShowRegisteredMessage);
   };
 
   const handleChange = (setter) => (e) => {
     setter(e.target.value.trim());
-  };
-
-  const handleShowLoggedInMessage = () => {
-    setShowLoggedInMessage(true);
-  };
-
-  const handleCloseLoggedInMessage = () => {
-    setShowLoggedInMessage(false);
-  };
-
-  const handleShowRegisteredMessage = () => {
-    setShowRegisteredMessage(true);
-  };
-
-  const handleCloseRegisteredMessage = () => {
-    setShowRegisteredMessage(false);
   };
 
   const handleLogout = () => {
@@ -334,28 +313,12 @@ function Panel(props) {
     axios
       .get(url)
       .then(() => {
-        handleShowLoggedOutMessage();
+        handleShow(setShowLoggedOutMessage);
         setUser({ username: "", token: "" });
       })
       .catch((err) => {
         console.error(err);
       });
-  };
-
-  const handleShowLoggedOutMessage = () => {
-    setShowLoggedOutMessage(true);
-  };
-
-  const handleCloseLoggedOutMessage = () => {
-    setShowLoggedOutMessage(false);
-  };
-
-  const handleShowCart = () => {
-    setShowCart(true);
-  };
-
-  const handleCloseCart = () => {
-    setShowCart(false);
   };
 
   const handleUpdateCart = () => {
@@ -387,18 +350,21 @@ function Panel(props) {
   };
 
   const handleCheckout = () => {
+    const body = { username: user.username };
     const url = urls.get("/checkout");
-    axios.put(url).catch((err) => {
-      console.error(err);
-    });
-  };
-
-  const handleShowResetPass = () => {
-    setShowResetPass(true);
+    axios
+      .put(url, body)
+      .then(() => {
+        handleUpdateCart();
+        handleShow(setShowCheckoutMessage);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const handleCloseResetPass = () => {
-    setShowResetPass(false);
+    setShowReset(false);
     setPassword("");
     setRetyped("");
     setErrorMessage("");
@@ -423,7 +389,7 @@ function Panel(props) {
       setIsPasswordValid(true);
     }
 
-    const url = "http://localhost:3000/verify";
+    const url = urls.get("/verify");
     const body = { username: user.username, password: password };
     console.log(body);
     axios
@@ -431,7 +397,7 @@ function Panel(props) {
       .then((res) => {
         console.log(res.data);
         if (res.data.result === "verified") {
-          handleShowResetPass();
+          handleShow(setShowReset);
           handleCloseVerification();
           setErrorMessage("");
         } else {
@@ -444,7 +410,7 @@ function Panel(props) {
   };
 
   const handleResetPassword = () => {
-    const url = "http://localhost:3000/changePassword";
+    const url = urls.get("/change-password");
 
     if (password.length === 0) {
       setIsPasswordValid(false);
@@ -472,6 +438,7 @@ function Panel(props) {
       .put(url, body)
       .then(() => {
         handleCloseResetPass();
+        handleShow(setShowResetMessage);
       })
       .catch((err) => {
         console.error(err);
@@ -494,7 +461,7 @@ function Panel(props) {
               <StyledButton
                 variant="secondary"
                 text="Login"
-                onClick={handleShowLogin}
+                onClick={() => handleShow(setShowLogin)}
               ></StyledButton>
             </>
           ) : (
@@ -504,7 +471,9 @@ function Panel(props) {
               </StyledDropDown>
 
               <Dropdown.Menu>
-                <StyledItem onClick={handleShowCart}>Cart</StyledItem>
+                <StyledItem onClick={() => handleShow(setShowCart)}>
+                  Cart
+                </StyledItem>
                 <StyledItem onClick={handleShowVerification}>
                   Change Password
                 </StyledItem>
@@ -547,7 +516,7 @@ function Panel(props) {
                 <ClickableText
                   onClick={() => {
                     handleCloseLogin();
-                    handleShowRegister();
+                    handleShow(setShowRegister);
                   }}
                 >
                   Register
@@ -620,59 +589,42 @@ function Panel(props) {
               />
             </StyledFooter>
           </Modal>
-          <Modal show={showLoggedInMessage} onHide={handleCloseLoggedInMessage}>
-            <Modal.Body>
-              <SuccessText>Login Successful</SuccessText>
-            </Modal.Body>
-            <StyledFooter>
-              <p />
-              <StyledButton
-                variant="secondary"
-                onClick={handleCloseLoggedInMessage}
-                text="Close"
-              />
-            </StyledFooter>
-          </Modal>
-          <Modal
+          <ModalWithMessage
+            show={showLoggedInMessage}
+            message={"Login Successful"}
+            hide={() => handleClose(setShowLoggedInMessage)}
+          />
+          <ModalWithMessage
+            show={showLoggedOutMessage}
+            message={"Log Out Successful"}
+            hide={() => handleClose(setShowLoggedOutMessage)}
+          />
+          <ModalWithMessage
             show={showRegisteredMessage}
-            onHide={handleCloseRegisteredMessage}
-          >
-            <Modal.Body>
-              <SuccessText>Account Created Successfully</SuccessText>
-            </Modal.Body>
-            <StyledFooter>
-              <StyledButton
-                variant="secondary"
-                onClick={handleCloseRegisteredMessage}
-                text="Close"
-              />
+            message={"Account Created Successfully"}
+            hide={() => handleClose(setShowRegisteredMessage)}
+            secondButton={
               <StyledButton
                 variant="secondary"
                 onClick={() => {
-                  handleCloseRegisteredMessage();
-                  handleShowLogin();
+                  handleClose(setShowRegisteredMessage);
+                  handleShow(setShowLogin);
                 }}
                 text="Go to Login"
               />
-            </StyledFooter>
-          </Modal>
-          <Modal
-            show={showLoggedOutMessage}
-            onHide={handleCloseLoggedOutMessage}
-          >
-            <Modal.Body>
-              <SuccessText>Log Out Successful</SuccessText>
-            </Modal.Body>
-            <StyledFooter>
-              <p />
-              <StyledButton
-                variant="secondary"
-                onClick={handleCloseLoggedOutMessage}
-                text="Close"
-              />
-            </StyledFooter>
-          </Modal>
-          <Modal show={showCart} onHide={handleCloseCart}>
+            }
+          />
+          <ModalWithMessage
+            show={showResetMessage}
+            message={"Reset Password Successful"}
+            hide={() => handleClose(setShowResetMessage)}
+          />
+          <ModalWithMessage
+            show={showCheckoutMessage}
+            message={"Checkout Successful"}
+            hide={() => handleClose(setShowCheckoutMessage)}
+          />
+          <Modal show={showCart} onHide={() => handleClose(setShowCart)}>
             <Modal.Body>
               <Title>Cart</Title>
               {cart.map((object) => {
@@ -690,7 +642,7 @@ function Panel(props) {
             <StyledFooter>
               <StyledButton
                 variant="secondary"
-                onClick={handleCloseCart}
+                onClick={() => handleClose(setShowCart)}
                 text="Close"
               />
               <StyledButton
@@ -734,7 +686,7 @@ function Panel(props) {
               />
             </StyledFooter>
           </Modal>
-          <Modal show={showResetPass} onHide={handleCloseResetPass}>
+          <Modal show={showReset} onHide={handleCloseResetPass}>
             <Modal.Header>Enter New Password</Modal.Header>
             <Modal.Body>
               <Form

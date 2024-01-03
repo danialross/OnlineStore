@@ -159,7 +159,7 @@ app.get("/logout", authenticateToken, (req, res) => {
 });
 
 // add to cart
-app.put("/addToCart", authenticateToken, async (req, res) => {
+app.put("/add-to-cart", authenticateToken, async (req, res) => {
   const itemId = req.body.itemId;
   const amount = req.body.quantity;
   const username = req.body.username;
@@ -234,7 +234,7 @@ app.post("/verify", authenticateToken, async (req, res) => {
 });
 
 //update password
-app.put("/changePassword", authenticateToken, async (req, res) => {
+app.put("/change-password", authenticateToken, async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
