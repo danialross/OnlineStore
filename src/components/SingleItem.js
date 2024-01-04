@@ -72,7 +72,7 @@ function SingleItem() {
         setIsLoading(false);
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [url]);
 
   return isLoading ? (
     <Loader />

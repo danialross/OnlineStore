@@ -179,24 +179,17 @@ app.put("/add-to-cart", authenticateToken, async (req, res) => {
       const cartItem = { id: itemId, quantity: amount };
       user.cart.push(cartItem);
     }
+    res
+      .status(200)
+      .json("item id: " + itemId + " added. amount now is " + amount);
   } else {
     const arrayWithoutItem = user.cart.filter((item) => {
       return item.id !== itemId;
     });
     user.cart = arrayWithoutItem;
-  }
 
-  // user will exist because if not it will propt user to login or register
-  const idInCart = [];
-  for (const object of user.cart) {
-    for (let i = 0; i < object.quantity; i++) {
-      idInCart.push(object.id);
-    }
+    res.status(200).json("item id: " + itemId + " removed");
   }
-
-  res
-    .status(200)
-    .json("item id: " + itemId + " added. user cart now : " + idInCart);
 });
 
 //check out

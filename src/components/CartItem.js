@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { Row, Col, Button } from "react-bootstrap";
-import { useState } from "react";
 import axios from "axios";
-import StyledButton from "./StyledButton";
 
 const Frame = styled.img`
   padding: 2rem;
@@ -30,6 +28,7 @@ const Quantity = styled.div`
 `;
 
 const Decrease = styled(Button)`
+  margin-left: 1rem;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 `;
@@ -46,7 +45,33 @@ const Increase = styled(Button)`
   border-bottom-left-radius: 0px;
 `;
 
-function CartItem({ image, title, price, quantity }) {
+const RemoveButton = styled(Button)`
+  padding: 0rem;
+`;
+
+function CartItem({
+  id,
+  image,
+  title,
+  price,
+  quantity,
+  username,
+  updateParent,
+}) {
+  const handleUpdateCart = async (count) => {
+    const url = "http://localhost:3000/add-to-cart";
+    const body = { username: username, itemId: id, quantity: count };
+    axios
+      .put(url, body)
+      .then((res) => {
+        console.log(res.data);
+        updateParent();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   return (
     <StyledDiv>
       <Row>
@@ -58,10 +83,23 @@ function CartItem({ image, title, price, quantity }) {
           <Price>${price}</Price>
 
           <Quantity>
-            Quantity : <Decrease>-</Decrease>
+            Quantity :
+            <Decrease
+              onClick={
+                quantity - 1 > 0 ? () => handleUpdateCart(quantity - 1) : null
+              }
+            >
+              -
+            </Decrease>
             <Counter disabled>{quantity}</Counter>
-            <Increase>+</Increase>
+            <Increase onClick={() => handleUpdateCart(quantity + 1)}>
+              +
+            </Increase>
           </Quantity>
+
+          <RemoveButton variant="link" onClick={() => handleUpdateCart(0)}>
+            Remove
+          </RemoveButton>
         </Col>
       </Row>
     </StyledDiv>

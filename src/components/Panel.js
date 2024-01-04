@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import {
@@ -152,6 +152,18 @@ const Title = styled.div`
   padding: 1rem;
 `;
 
+const EmptyCart = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+
+  padding: 1rem;
+  color: #89abe3;
+  text-align: center;
+  height: 10rem;
+`;
+
 const urls = new Map();
 urls.set("/login", "http://localhost:3000/login");
 urls.set("/register", "http://localhost:3000/register");
@@ -170,6 +182,7 @@ function Panel(props) {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [retyped, setRetyped] = useState("");
   const [isRetypedValid, setIsRetypedValid] = useState(true);
+  const [cart, setCart] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -179,7 +192,6 @@ function Panel(props) {
   const [showCheckoutMessage, setShowCheckoutMessage] = useState(false);
   const [showResetMessage, setShowResetMessage] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [cart, setCart] = useState([]);
   const [showReset, setShowReset] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
 
@@ -278,7 +290,9 @@ function Panel(props) {
           handleShow(setShowLoggedInMessage);
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const handleRegister = () => {
@@ -322,21 +336,24 @@ function Panel(props) {
   };
 
   const handleUpdateCart = () => {
-    const url = urls.get("/cart");
+    const cartUrl = urls.get("/cart");
+    const itemUrl = urls.get("/items");
+
     const cartWithDetails = [];
 
     axios
-      .get(url)
-      .then((res) => {
-        for (const item of res.data) {
-          const url = urls.get("/items");
-          const itemInCart = { item: {}, quantity: item.quantity };
+      .get(cartUrl)
+      .then(async (res) => {
+        const result = res.data;
 
-          axios
-            .get(url + item.id)
+        for (const object of result) {
+          await axios
+            .get(itemUrl + object.id)
             .then((res) => {
-              itemInCart.item = res.data.item;
-              cartWithDetails.push(itemInCart);
+              cartWithDetails.push({
+                item: res.data.item,
+                quantity: object.quantity,
+              });
             })
             .catch((err) => {
               console.error(err);
@@ -348,6 +365,38 @@ function Panel(props) {
         console.error(err);
       });
   };
+
+  // const handleUpdateCart = async () => {
+  //   const cartUrl = urls.get("/cart");
+  //   const itemUrl = urls.get("/items");
+
+  //   try {
+  //     const response = await axios.get(cartUrl);
+  //     const cartWithoutDetails = response.data;
+
+  //     console.log(cartWithoutDetails);
+
+  //     const promises = cartWithoutDetails.map(async (object) => {
+  //       try {
+  //         const res = await axios.get(itemUrl + object.id);
+  //         console.log(res.data);
+
+  //         return {
+  //           item: res.data.item,
+  //           quantity: object.quantity,
+  //         };
+  //       } catch (err) {
+  //         console.error(err);
+  //         return null;
+  //       }
+  //     });
+
+  //     const cartWithDetails = await Promise.all(promises.filter(Boolean));
+  //     setCart(cartWithDetails);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const handleCheckout = () => {
     const body = { username: user.username };
@@ -408,7 +457,6 @@ function Panel(props) {
         console.error(err);
       });
   };
-
   const handleResetPassword = () => {
     const url = urls.get("/change-password");
 
@@ -471,7 +519,11 @@ function Panel(props) {
               </StyledDropDown>
 
               <Dropdown.Menu>
-                <StyledItem onClick={() => handleShow(setShowCart)}>
+                <StyledItem
+                  onClick={() => {
+                    handleShow(setShowCart);
+                  }}
+                >
                   Cart
                 </StyledItem>
                 <StyledItem onClick={handleShowVerification}>
@@ -627,17 +679,24 @@ function Panel(props) {
           <Modal show={showCart} onHide={() => handleClose(setShowCart)}>
             <Modal.Body>
               <Title>Cart</Title>
-              {cart.map((object) => {
-                return (
-                  <CartItem
-                    key={object.item.id}
-                    image={object.item.image}
-                    title={object.item.title}
-                    price={object.item.price}
-                    quantity={object.quantity}
-                  />
-                );
-              })}
+              {cart.length > 0 ? (
+                cart.map((object) => {
+                  return (
+                    <CartItem
+                      key={object.item.id}
+                      id={object.item.id}
+                      username={user.username}
+                      image={object.item.image}
+                      title={object.item.title}
+                      price={object.item.price}
+                      quantity={object.quantity}
+                      updateParent={handleUpdateCart}
+                    />
+                  );
+                })
+              ) : (
+                <EmptyCart>No Items In Cart</EmptyCart>
+              )}
             </Modal.Body>
             <StyledFooter>
               <StyledButton
