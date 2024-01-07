@@ -179,9 +179,9 @@ app.put("/increase-item-quantity", authenticateToken, (req, res) => {
   res.status(200).json("item id: " + itemId + " added.");
 });
 
-// add item
-app.put("/decrease-item-quantity", authenticateToken, async (req, res) => {
-  const itemId = req.body.itemId;
+// reduce item
+app.put("/decrease-item-quantity", authenticateToken, (req, res) => {
+  const itemId = req.body.id;
   const username = req.body.username;
   const isRemoving = req.body.isRemoving;
 
@@ -198,13 +198,10 @@ app.put("/decrease-item-quantity", authenticateToken, async (req, res) => {
       return item.id !== itemId;
     });
     user.cart = arrayWithoutItem;
-
     res.status(200).json("item id: " + itemId + " removed");
   } else {
     itemInCart.quantity = --itemInCart.quantity;
-    res
-      .status(200)
-      .json("item id: " + itemId + " reduced to " + itemInCart.quantity);
+    res.status(200).json("item id: " + itemId + " reduced.");
   }
 });
 

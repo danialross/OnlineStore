@@ -15,10 +15,16 @@ const CustomSpinner = styled(Spinner)`
   padding: 2rem;
 `;
 
-function Loader() {
+function Loader({ variant, ...otherProps }) {
   return (
     <LoadDiv>
-      <CustomSpinner animation="border" role="status" variant="light" size="lg">
+      <CustomSpinner
+        animation="border"
+        role="status"
+        size="lg"
+        {...otherProps}
+        variant={variant ? variant : "light"}
+      >
         <span className="visually-hidden">Loading...</span>
       </CustomSpinner>
     </LoadDiv>

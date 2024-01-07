@@ -68,32 +68,28 @@ function CartItem({
   username,
   updateParent,
 }) {
-  const handleDecrease = (isRemoving) => {
-    const url = urls.get("/decrease-item-quantity");
-    const body = { username: username, itemId: id, isRemoving: isRemoving };
-    axios
-      .put(url, body)
-      .then((res) => {
-        console.log(res.data);
-        updateParent();
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  const handleChange = (isIncrease, isRemoving) => {
+    let url = "";
+    const body = { username: username, id: id, isRemoving: undefined };
+    if (isIncrease) {
+      url = urls.get("/increase-item-quantity");
+    } else {
+      url = urls.get("/decrease-item-quantity");
+      if (isRemoving) {
+        body.isRemoving = isRemoving;
+      }
+    }
 
-  const handleIncrease = (count) => {
-    const url = urls.get("/increase-item-quantity");
-    const body = { username: username, itemId: id };
     axios
       .put(url, body)
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
         updateParent();
       })
       .catch((err) => {
         console.error(err);
       });
+
+    updateParent();
   };
 
   return (
@@ -109,15 +105,18 @@ function CartItem({
           <Quantity>
             Quantity :
             <Decrease
-              onClick={quantity - 1 > 0 ? () => handleDecrease(false) : null}
+              onClick={quantity - 1 > 0 ? () => handleChange(false) : null}
             >
               -
             </Decrease>
             <Counter disabled>{quantity}</Counter>
-            <Increase onClick={handleIncrease}>+</Increase>
+            <Increase onClick={() => handleChange(true)}>+</Increase>
           </Quantity>
 
-          <RemoveButton variant="link" onClick={() => handleDecrease(true)}>
+          <RemoveButton
+            variant="link"
+            onClick={() => handleChange(false, true)}
+          >
             Remove
           </RemoveButton>
         </Col>
