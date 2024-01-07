@@ -49,6 +49,16 @@ const RemoveButton = styled(Button)`
   padding: 0rem;
 `;
 
+const urls = new Map();
+urls.set(
+  "/decrease-item-quantity",
+  "http://localhost:3000/decrease-item-quantity"
+);
+urls.set(
+  "/increase-item-quantity",
+  "http://localhost:3000/increase-item-quantity"
+);
+
 function CartItem({
   id,
   image,
@@ -58,9 +68,23 @@ function CartItem({
   username,
   updateParent,
 }) {
-  const handleUpdateCart = async (count) => {
-    const url = "http://localhost:3000/add-to-cart";
-    const body = { username: username, itemId: id, quantity: count };
+  const handleDecrease = (isRemoving) => {
+    const url = urls.get("/decrease-item-quantity");
+    const body = { username: username, itemId: id, isRemoving: isRemoving };
+    axios
+      .put(url, body)
+      .then((res) => {
+        console.log(res.data);
+        updateParent();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const handleIncrease = (count) => {
+    const url = urls.get("/increase-item-quantity");
+    const body = { username: username, itemId: id };
     axios
       .put(url, body)
       .then((res) => {
@@ -85,19 +109,15 @@ function CartItem({
           <Quantity>
             Quantity :
             <Decrease
-              onClick={
-                quantity - 1 > 0 ? () => handleUpdateCart(quantity - 1) : null
-              }
+              onClick={quantity - 1 > 0 ? () => handleDecrease(false) : null}
             >
               -
             </Decrease>
             <Counter disabled>{quantity}</Counter>
-            <Increase onClick={() => handleUpdateCart(quantity + 1)}>
-              +
-            </Increase>
+            <Increase onClick={handleIncrease}>+</Increase>
           </Quantity>
 
-          <RemoveButton variant="link" onClick={() => handleUpdateCart(0)}>
+          <RemoveButton variant="link" onClick={() => handleDecrease(true)}>
             Remove
           </RemoveButton>
         </Col>

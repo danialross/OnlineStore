@@ -158,10 +158,9 @@ app.get("/logout", authenticateToken, (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 });
 
-// add to cart
-app.put("/add-to-cart", authenticateToken, async (req, res) => {
-  const itemId = req.body.itemId;
-  const amount = req.body.quantity;
+// add item
+app.put("/increase-item-quantity", authenticateToken, (req, res) => {
+  const itemId = req.body.id;
   const username = req.body.username;
 
   const user = users.find((user) => {
@@ -171,24 +170,41 @@ app.put("/add-to-cart", authenticateToken, async (req, res) => {
   const itemInCart = user.cart.find((item) => {
     return item.id === itemId;
   });
-
-  if (amount > 0) {
-    if (itemInCart) {
-      itemInCart.quantity = amount;
-    } else {
-      const cartItem = { id: itemId, quantity: amount };
-      user.cart.push(cartItem);
-    }
-    res
-      .status(200)
-      .json("item id: " + itemId + " added. amount now is " + amount);
+  if (itemInCart) {
+    itemInCart.quantity = ++itemInCart.quantity;
   } else {
+    const cartItem = { id: itemId, quantity: 1 };
+    user.cart.push(cartItem);
+  }
+  res.status(200).json("item id: " + itemId + " added.");
+});
+
+// add item
+app.put("/decrease-item-quantity", authenticateToken, async (req, res) => {
+  const itemId = req.body.itemId;
+  const username = req.body.username;
+  const isRemoving = req.body.isRemoving;
+
+  const user = users.find((user) => {
+    return user.username === username;
+  });
+
+  const itemInCart = user.cart.find((item) => {
+    return item.id === itemId;
+  });
+
+  if (isRemoving === true || itemInCart.quantity === 1) {
     const arrayWithoutItem = user.cart.filter((item) => {
       return item.id !== itemId;
     });
     user.cart = arrayWithoutItem;
 
     res.status(200).json("item id: " + itemId + " removed");
+  } else {
+    itemInCart.quantity = --itemInCart.quantity;
+    res
+      .status(200)
+      .json("item id: " + itemId + " reduced to " + itemInCart.quantity);
   }
 });
 

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Loader from "./Loader";
 import StyledButton from "./StyledButton";
+import addToCartContext from "../context/AddToCartContext";
 
 const OuterDiv = styled.div`
   display: flex;
@@ -76,6 +77,7 @@ const ColoredText = styled.p`
 function Category({ filterBy }) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { handleAddToCart } = useContext(addToCartContext);
 
   let url = "";
   let title = "";
@@ -102,7 +104,7 @@ function Category({ filterBy }) {
       setIsLoading(true);
       setItems([]);
     };
-  }, []);
+  }, [url]);
 
   return (
     <OuterDiv>
@@ -121,7 +123,11 @@ function Category({ filterBy }) {
                   <ColoredText>{item.title}</ColoredText>
                   <ColoredText>${item.price.toFixed(2)}</ColoredText>
                 </StyledLink>
-                <StyledButton variant={"secondary"} text={"ADD TO CART"} />
+                <StyledButton
+                  variant={"secondary"}
+                  text={"Add To Cart"}
+                  onClick={() => handleAddToCart(item.id)}
+                />
               </Card>
             );
           })}

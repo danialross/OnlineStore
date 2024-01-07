@@ -58,7 +58,7 @@ const BottomGap = styled.div`
   margin-bottom: 2rem;
 `;
 
-function SingleItem() {
+function SingleItem({ handleAddToCart }) {
   const itemId = useParams();
   const [item, setItem] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -84,7 +84,7 @@ function SingleItem() {
         <Text>
           <BottomGap>${item.price.toFixed(2)}</BottomGap>
           <BottomGap>{item.description}</BottomGap>
-          <StyledButton text={"ADD TO CART"} />
+          <StyledButton onClick={handleAddToCart} text={"Add To Cart"} />
         </Text>
       </Background>
     </CenterDiv>

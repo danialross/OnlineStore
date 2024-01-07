@@ -254,7 +254,7 @@ function Catalog() {
                           <Text>${item.price.toFixed(2)}</Text>
                         </Body>
                       </StyledNavLink>
-                      <StyledButton variant="secondary" text="ADD TO CART" />
+                      <StyledButton variant="secondary" text="Add To Cart" />
                     </CustomCard>
                   );
                 })

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import {
@@ -17,6 +17,7 @@ import UserInput from "./UserInput";
 import ErrorMessage from "./ErrorMessage";
 import CartItem from "./CartItem";
 import ModalWithMessage from "./ModalWithMessage";
+import addToCartContext from "../context/AddToCartContext";
 
 const StyledNavbar = styled(Navbar)`
   background-color: #89abe3;
@@ -173,6 +174,14 @@ urls.set("/items", "http://localhost:3000/items/");
 urls.set("/logout", "http://localhost:3000/logout");
 urls.set("/verify", "http://localhost:3000/verify");
 urls.set("/change-password", "http://localhost:3000/change-password");
+urls.set(
+  "/increase-item-quantity",
+  "http://localhost:3000/increase-item-quantity"
+);
+urls.set(
+  "/decrease-item-quantity",
+  "http://localhost:3000/decrease-item-quantity"
+);
 
 function Panel(props) {
   const [user, setUser] = useState({ username: "", token: "" });
@@ -191,6 +200,7 @@ function Panel(props) {
   const [showLoggedOutMessage, setShowLoggedOutMessage] = useState(false);
   const [showCheckoutMessage, setShowCheckoutMessage] = useState(false);
   const [showResetMessage, setShowResetMessage] = useState(false);
+  const [showAddedToCartMessage, setShowAddedToCartMessage] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
@@ -366,38 +376,6 @@ function Panel(props) {
       });
   };
 
-  // const handleUpdateCart = async () => {
-  //   const cartUrl = urls.get("/cart");
-  //   const itemUrl = urls.get("/items");
-
-  //   try {
-  //     const response = await axios.get(cartUrl);
-  //     const cartWithoutDetails = response.data;
-
-  //     console.log(cartWithoutDetails);
-
-  //     const promises = cartWithoutDetails.map(async (object) => {
-  //       try {
-  //         const res = await axios.get(itemUrl + object.id);
-  //         console.log(res.data);
-
-  //         return {
-  //           item: res.data.item,
-  //           quantity: object.quantity,
-  //         };
-  //       } catch (err) {
-  //         console.error(err);
-  //         return null;
-  //       }
-  //     });
-
-  //     const cartWithDetails = await Promise.all(promises.filter(Boolean));
-  //     setCart(cartWithDetails);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const handleCheckout = () => {
     const body = { username: user.username };
     const url = urls.get("/checkout");
@@ -405,6 +383,7 @@ function Panel(props) {
       .put(url, body)
       .then(() => {
         handleUpdateCart();
+        handleClose(setShowCart);
         handleShow(setShowCheckoutMessage);
       })
       .catch((err) => {
@@ -491,6 +470,27 @@ function Panel(props) {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const handleAddToCart = (id) => {
+    if (user.username !== "") {
+      const url = urls.get("/increase-item-quantity");
+      const body = { username: user.username, id: id };
+
+      axios
+        .put(url, body)
+        .then((res) => {
+          handleUpdateCart();
+          handleShow(setShowAddedToCartMessage);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      handleShow(setShowLogin);
+      return;
+    }
   };
 
   return (
@@ -676,6 +676,11 @@ function Panel(props) {
             message={"Checkout Successful"}
             hide={() => handleClose(setShowCheckoutMessage)}
           />
+          <ModalWithMessage
+            show={showAddedToCartMessage}
+            message={"Item Added To Cart"}
+            hide={() => handleClose(setShowAddedToCartMessage)}
+          />
           <Modal show={showCart} onHide={() => handleClose(setShowCart)}>
             <Modal.Body>
               <Title>Cart</Title>
@@ -706,6 +711,7 @@ function Panel(props) {
               />
               <StyledButton
                 variant="secondary"
+                disabled={cart.length === 0}
                 onClick={handleCheckout}
                 text="Checkout"
               />
@@ -791,7 +797,9 @@ function Panel(props) {
           </Modal>
         </Container>
       </StyledNavbar>
-      {props.children}
+      <addToCartContext.Provider value={{ handleAddToCart }}>
+        {props.children}
+      </addToCartContext.Provider>
       <Footer />
     </>
   );
