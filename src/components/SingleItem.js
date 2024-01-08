@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Image } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 import StyledButton from "./StyledButton";
 import Loader from "./Loader";
+import AddToCartContext from "../context/AddToCartContext";
 
 const CenterDiv = styled.div`
   display: flex;
@@ -58,11 +59,12 @@ const BottomGap = styled.div`
   margin-bottom: 2rem;
 `;
 
-function SingleItem({ handleAddToCart }) {
+function SingleItem() {
   const itemId = useParams();
   const [item, setItem] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const url = "http://localhost:3000/items/" + itemId.id;
+  const { handleAddToCart } = useContext(AddToCartContext);
 
   useEffect(() => {
     axios
@@ -84,7 +86,10 @@ function SingleItem({ handleAddToCart }) {
         <Text>
           <BottomGap>${item.price.toFixed(2)}</BottomGap>
           <BottomGap>{item.description}</BottomGap>
-          <StyledButton onClick={handleAddToCart} text={"Add To Cart"} />
+          <StyledButton
+            onClick={() => handleAddToCart(item.id)}
+            text={"Add To Cart"}
+          />
         </Text>
       </Background>
     </CenterDiv>

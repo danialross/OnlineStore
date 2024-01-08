@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import StyledButton from "./StyledButton";
@@ -11,6 +11,7 @@ import {
   faUndo,
   faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
+import addToCartContext from "../context/AddToCartContext";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -159,6 +160,7 @@ function Catalog() {
   const [items, setItems] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { handleAddToCart } = useContext(addToCartContext);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -254,7 +256,11 @@ function Catalog() {
                           <Text>${item.price.toFixed(2)}</Text>
                         </Body>
                       </StyledNavLink>
-                      <StyledButton variant="secondary" text="Add To Cart" />
+                      <StyledButton
+                        variant="secondary"
+                        text="Add To Cart"
+                        onClick={() => handleAddToCart(item.id)}
+                      />
                     </CustomCard>
                   );
                 })
