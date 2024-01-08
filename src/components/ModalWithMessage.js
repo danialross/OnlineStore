@@ -3,13 +3,13 @@ import styled from "styled-components";
 import StyledButton from "./StyledButton";
 
 const SuccessText = styled(Form.Text)`
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   padding: 0.5rem;
   color: green;
-  width: 100%;
   border-radius: 10px;
 `;
 
@@ -18,7 +18,13 @@ const StyledFooter = styled(Modal.Footer)`
   justify-content: space-between;
 `;
 
-function ModalWithMessage({ show, hide, message, secondButton }) {
+function ModalWithMessage({
+  show,
+  hide,
+  message,
+  secondButton,
+  ...otherProps
+}) {
   return (
     <Modal show={show} onHide={hide}>
       <Modal.Body>

@@ -12,6 +12,7 @@ import {
   faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import addToCartContext from "../context/AddToCartContext";
+import ModalWithMessage from "./ModalWithMessage";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -161,6 +162,16 @@ function Catalog() {
   const [filtered, setFiltered] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { handleAddToCart } = useContext(addToCartContext);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleButtonClick = async (id, title) => {
+    const result = await handleAddToCart(id);
+    if (result === "success") {
+      setShowMessage(true);
+      setMessage(title);
+    }
+  };
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -259,7 +270,7 @@ function Catalog() {
                       <StyledButton
                         variant="secondary"
                         text="Add To Cart"
-                        onClick={() => handleAddToCart(item.id)}
+                        onClick={() => handleButtonClick(item.id, item.title)}
                       />
                     </CustomCard>
                   );
@@ -275,6 +286,14 @@ function Catalog() {
               )}
             </ItemsDiv>
           )}
+          <ModalWithMessage
+            show={showMessage}
+            message={message + " has been added"}
+            hide={() => {
+              setShowMessage(false);
+            }}
+            onExited={() => setMessage("")}
+          />
         </Col>
       </Bar>
     </StyledDiv>

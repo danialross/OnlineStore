@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Loader from "./Loader";
 import StyledButton from "./StyledButton";
 import addToCartContext from "../context/AddToCartContext";
+import ModalWithMessage from "./ModalWithMessage";
 
 const OuterDiv = styled.div`
   display: flex;
@@ -78,6 +79,16 @@ function Category({ filterBy }) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { handleAddToCart } = useContext(addToCartContext);
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleButtonClick = async (id, title) => {
+    const result = await handleAddToCart(id);
+    if (result === "success") {
+      setShowMessage(true);
+      setMessage(title);
+    }
+  };
 
   let url = "";
   let title = "";
@@ -126,13 +137,21 @@ function Category({ filterBy }) {
                 <StyledButton
                   variant={"secondary"}
                   text={"Add To Cart"}
-                  onClick={() => handleAddToCart(item.id)}
+                  onClick={() => handleButtonClick(item.id, item.title)}
                 />
               </Card>
             );
           })}
         </ItemsDiv>
       )}
+      <ModalWithMessage
+        show={showMessage}
+        message={message + " has been added"}
+        hide={() => {
+          setShowMessage(false);
+        }}
+        onExited={() => setMessage("")}
+      />
     </OuterDiv>
   );
 }

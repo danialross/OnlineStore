@@ -6,6 +6,7 @@ import styled from "styled-components";
 import StyledButton from "./StyledButton";
 import Loader from "./Loader";
 import AddToCartContext from "../context/AddToCartContext";
+import ModalWithMessage from "./ModalWithMessage";
 
 const CenterDiv = styled.div`
   display: flex;
@@ -65,6 +66,7 @@ function SingleItem() {
   const [isLoading, setIsLoading] = useState(true);
   const url = "http://localhost:3000/items/" + itemId.id;
   const { handleAddToCart } = useContext(AddToCartContext);
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     axios
@@ -75,6 +77,13 @@ function SingleItem() {
       })
       .catch((err) => console.error(err));
   }, [url]);
+
+  const handleButtonClick = async (id, title) => {
+    const result = await handleAddToCart(id);
+    if (result === "success") {
+      setShowMessage(true);
+    }
+  };
 
   return isLoading ? (
     <Loader />
@@ -87,11 +96,19 @@ function SingleItem() {
           <BottomGap>${item.price.toFixed(2)}</BottomGap>
           <BottomGap>{item.description}</BottomGap>
           <StyledButton
-            onClick={() => handleAddToCart(item.id)}
+            onClick={() => handleButtonClick(item.id, item.title)}
+            variant={"secondary"}
             text={"Add To Cart"}
           />
         </Text>
       </Background>
+      <ModalWithMessage
+        show={showMessage}
+        message={item.title + " has been added"}
+        hide={() => {
+          setShowMessage(false);
+        }}
+      />
     </CenterDiv>
   );
 }

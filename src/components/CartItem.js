@@ -8,7 +8,6 @@ const Frame = styled.img`
 `;
 const StyledDiv = styled.div`
   color: #89abe3;
-
   margin-bottom: 1rem;
   border-top: 2px solid #ccc;
 `;

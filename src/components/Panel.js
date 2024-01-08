@@ -208,7 +208,6 @@ function Panel(props) {
   const [showLoggedOutMessage, setShowLoggedOutMessage] = useState(false);
   const [showCheckoutMessage, setShowCheckoutMessage] = useState(false);
   const [showResetMessage, setShowResetMessage] = useState(false);
-  const [showAddedToCartMessage, setShowAddedToCartMessage] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
@@ -341,7 +340,6 @@ function Panel(props) {
 
   const handleLogout = () => {
     const url = urls.get("/logout");
-    console.log("url " + url);
     axios
       .get(url)
       .then(() => {
@@ -480,24 +478,20 @@ function Panel(props) {
       });
   };
 
-  const handleAddToCart = (id) => {
+  const handleAddToCart = async (id) => {
     if (user.username !== "") {
       const url = urls.get("/increase-item-quantity");
       const body = { username: user.username, id: id };
-
-      axios
-        .put(url, body)
-        .then((res) => {
-          handleUpdateCart();
-          handleShow(setShowAddedToCartMessage);
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      try {
+        await axios.put(url, body);
+        handleUpdateCart();
+        return "success";
+      } catch {
+        return "error";
+      }
     } else {
       handleShow(setShowLogin);
-      return;
+      return "require login";
     }
   };
 
@@ -692,11 +686,6 @@ function Panel(props) {
             show={showCheckoutMessage}
             message={"Checkout Successful"}
             hide={() => handleClose(setShowCheckoutMessage)}
-          />
-          <ModalWithMessage
-            show={showAddedToCartMessage}
-            message={"Item Added To Cart"}
-            hide={() => handleClose(setShowAddedToCartMessage)}
           />
           <Modal show={showCart} onHide={() => handleClose(setShowCart)}>
             <Modal.Body>
