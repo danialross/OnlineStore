@@ -153,6 +153,14 @@ const Title = styled.div`
   padding: 1rem;
 `;
 
+const Total = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  color: #89abe3;
+  border-top: 2px solid #ccc;
+  padding: 1rem;
+`;
+
 const EmptyCart = styled.div`
   display: flex;
   justify-content: center;
@@ -493,6 +501,15 @@ function Panel(props) {
     }
   };
 
+  const calculateCartTotal = () => {
+    return cart
+      .reduce((total, object) => {
+        const itemSales = object.item.price * object.quantity;
+        return total + itemSales;
+      }, 0)
+      .toFixed(2);
+  };
+
   return (
     <>
       <StyledNavbar fixed="top">
@@ -685,20 +702,24 @@ function Panel(props) {
             <Modal.Body>
               <Title>Cart</Title>
               {cart.length > 0 ? (
-                cart.map((object) => {
-                  return (
-                    <CartItem
-                      key={object.item.id}
-                      id={object.item.id}
-                      username={user.username}
-                      image={object.item.image}
-                      title={object.item.title}
-                      price={object.item.price}
-                      quantity={object.quantity}
-                      updateParent={handleUpdateCart}
-                    />
-                  );
-                })
+                <>
+                  {cart.map((object) => {
+                    return (
+                      <CartItem
+                        key={object.item.id}
+                        id={object.item.id}
+                        username={user.username}
+                        image={object.item.image}
+                        title={object.item.title}
+                        price={object.item.price}
+                        quantity={object.quantity}
+                        updateParent={handleUpdateCart}
+                      />
+                    );
+                  })}
+
+                  <Total>Total: ${calculateCartTotal()}</Total>
+                </>
               ) : (
                 <EmptyCart>No Items In Cart</EmptyCart>
               )}
